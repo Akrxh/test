@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000"><meta name="color-scheme" content="dark">
+<title>AttendanceSync</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{--tx:#f5f5f7;--mu:#86868b;--ln:rgba(255,255,255,.1);--go:#30d158;--pe:#ffd60a;--ou:#ff453a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;overflow-x:hidden}
+body{background:radial-gradient(700px 420px at 50% -8%,rgba(255,255,255,.13),transparent 70%) no-repeat,#000;color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+[hidden]{display:none!important}
+.wrap{max-width:30rem;margin:0 auto;padding:1rem 1rem 2.5rem}
+.g{background:rgba(255,255,255,.06);-webkit-backdrop-filter:blur(30px) saturate(160%);backdrop-filter:blur(30px) saturate(160%);border:1px solid var(--ln);border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);margin-bottom:1rem}
+.pad{padding:1.25rem}.c{text-align:center}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.4rem 0 1.2rem}
+.brand{font-weight:600;letter-spacing:-.01em;display:flex;gap:.5rem;align-items:center}
+.hr{display:flex;gap:.5rem}
+.pill{display:flex;align-items:center;gap:.45rem;padding:.4rem .75rem;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--ln);font-size:.75rem;font-weight:500}
+.pill s{width:7px;height:7px;border-radius:50%;background:#555}
+.pill.ok s{background:var(--go);box-shadow:0 0 8px var(--go)}
+h1{font-size:1.6rem;letter-spacing:-.02em;margin:.2rem 0}
+.mu{color:var(--mu);font-size:.9rem;margin:.2rem 0 1rem}
+.dots{display:flex;justify-content:center;gap:.9rem;margin:1.3rem 0}
+.dots i{width:13px;height:13px;border-radius:50%;border:1.5px solid #6e6e73;transition:.15s}
+.dots i.f{background:#fff;border-color:#fff}
+.k3{display:grid;grid-template-columns:repeat(3,4.2rem);gap:.8rem;justify-content:center}
+.key{width:4.2rem;height:4.2rem;border-radius:50%;background:rgba(255,255,255,.09);font-size:1.5rem;font-weight:300}
+.key:active{background:rgba(255,255,255,.28)}
+.key.n{background:none;font-size:1.1rem}
+.shake{animation:sh .4s}
+@keyframes sh{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.lnk{color:#6e6e73;font-size:.75rem;text-decoration:underline;text-underline-offset:4px}
+.hero{display:flex;align-items:center;gap:1.2rem;padding:1.2rem}
+.rw{position:relative;width:8.2rem;height:8.2rem;flex-shrink:0}
+.rw svg{width:100%;height:100%}
+.tr,.ar{fill:none;stroke-width:9}
+.tr{stroke:rgba(255,255,255,.1)}
+.ar{stroke:#fff;stroke-linecap:round;transition:stroke-dasharray .8s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 6px rgba(255,255,255,.5))}
+.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.rc b{font-size:2.3rem;font-weight:600;letter-spacing:-.03em}
+.rc span{font-size:.68rem;color:var(--mu);margin-top:.3rem}
+.hm{min-width:0;flex:1}
+.hm small{color:var(--mu);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em}
+.hm h2{margin:.15rem 0 .8rem;font-size:1.35rem;letter-spacing:-.02em;font-weight:600}
+.lg{display:grid;gap:.4rem;font-size:.82rem;color:#c7c7cc}
+.lg div{display:flex;align-items:center;gap:.5rem}
+.lg b{margin-left:auto;color:var(--tx)}
+.lg s,.st s{width:8px;height:8px;border-radius:50%;background:var(--c);flex-shrink:0}
+.who{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.av{width:2.4rem;height:2.4rem;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;font-weight:600;flex-shrink:0}
+.nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.nm em{font-style:normal;color:var(--mu);font-size:.72rem;margin-left:.5rem}
+.sg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);padding:3px;border-radius:14px;background:rgba(118,118,128,.24)}
+.sg button{position:relative;z-index:1;padding:.7rem .2rem;font-size:.82rem;font-weight:500;color:#c7c7cc;display:flex;flex-direction:column;align-items:center;gap:.3rem;transition:color .25s}
+.sg button.on{color:#000}
+.sg i{font-size:1rem}
+.th{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/3);border-radius:11px;background:#f5f5f7;box-shadow:0 3px 10px rgba(0,0,0,.4);transition:transform .35s cubic-bezier(.3,1.15,.4,1)}
+.sec{margin:1.4rem .4rem .6rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mu);font-weight:500}
+.list{overflow:hidden}
+.row{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem}
+.row+.row{border-top:1px solid var(--ln)}
+.st{display:flex;align-items:center;gap:.45rem;font-size:.8rem;color:#c7c7cc;white-space:nowrap}
+.going{--c:var(--go)}.pending{--c:var(--pe)}.out{--c:var(--ou)}
+.note{text-align:center;color:#6e6e73;font-size:.72rem;margin:1.4rem 0 .6rem}
+.btn{padding:.75rem 1.2rem;border-radius:999px;background:#f5f5f7;color:#000;font-weight:600;font-size:.9rem}
+.btn.s{background:rgba(255,255,255,.1);color:var(--tx)}
+.inp{width:100%;background:rgba(118,118,128,.24);border:0;border-radius:12px;padding:.8rem .9rem;color:#fff;font:inherit;outline:none;margin-bottom:.6rem}
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.modal.show{display:flex}
+.modal .g{width:100%;max-width:26rem;max-height:calc(100dvh - 2rem);overflow-y:auto;margin:0;background:rgba(28,28,30,.92)}
+.acts{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.5rem}
+.ar-row{display:flex;align-items:center;gap:.6rem;padding:.6rem 0;border-top:1px solid var(--ln);font-size:.9rem}
+.ar-row code{color:var(--mu);margin-right:.3rem}
+.ar-row button{color:var(--mu);font-size:.8rem}
+#toast{position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%);max-width:90vw;z-index:60;padding:.6rem 1rem;border-radius:999px;background:rgba(60,60,62,.95);font-size:.85rem;text-align:center}
+button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hd">
+    <b class="brand"><i class="fa-solid fa-circle-half-stroke"></i>AttendanceSync</b>
+    <div class="hr"><span id="live" class="pill"><s></s><em style="font-style:normal">Offline</em></span><button id="out" class="pill" hidden>Sign out</button></div>
+  </header>
+
+  <section id="vLoad" class="g pad c"><p id="msg" class="mu" style="margin:0">Connecting…</p></section>
+
+  <section id="vLogin" class="g pad c" hidden>
+    <h1>Enter your code</h1><p class="mu" style="margin-bottom:0">Your 4-digit code unlocks today's attendance.</p>
+    <div id="dots" class="dots"></div><div id="pad" class="k3"></div>
+  </section>
+
+  <div id="vApp" hidden>
+    <section class="g hero">
+      <div class="rw"><svg viewBox="0 0 120 120"><circle class="tr" cx="60" cy="60" r="52"/><circle id="arc" class="ar" cx="60" cy="60" r="52" transform="rotate(-90 60 60)" stroke-dasharray="0 326.7"/></svg>
+        <div class="rc"><b id="rn">0</b><span id="rl">of 0 confirmed</span></div></div>
+      <div class="hm"><small id="dw"></small><h2 id="dd"></h2><div class="lg" id="lg"></div></div>
+    </section>
+    <section id="sess" class="g pad"></section>
+    <h3 class="sec">Class roster</h3>
+    <div id="list" class="g list"></div>
+    <p id="note" class="note"></p>
+  </div>
+  <div class="c"><button id="adm" class="lnk">Admin access</button></div>
+</main>
+<div id="toast" hidden></div>
+
+<div id="mAdmin" class="modal"><div class="g pad">
+  <div id="aGate"><h1 style="font-size:1.25rem">Admin access</h1><input id="aPass" type="password" class="inp" placeholder="Passcode" autocomplete="off">
+    <div class="acts"><button class="btn s" data-x>Cancel</button><button id="aGo" class="btn">Unlock</button></div></div>
+  <div id="aPanel" hidden><h1 style="font-size:1.25rem">Manage students</h1>
+    <input id="nName" class="inp" placeholder="Student name" maxlength="24"><input id="nCode" class="inp" placeholder="4-digit code" inputmode="numeric" maxlength="4">
+    <button id="aAdd" class="btn" style="width:100%">Add student</button><div id="aList" style="margin-top:1rem"></div>
+    <div class="acts"><button id="aExit" class="btn s">Exit admin</button><button class="btn" data-x>Done</button></div></div>
+</div></div>
+
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {getAuth,onAuthStateChanged,signInAnonymously} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import {getDatabase,ref,onValue,set,get,update,remove} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+/* ====== FIREBASE CONFIG: paste your Web API Key (Project settings > General) ====== */
+const firebaseConfig={
+  apiKey:"PASTE_YOUR_WEB_API_KEY",
+  authDomain:"frienzo-frnd.firebaseapp.com",
+  databaseURL:"https://frienzo-frnd-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"frienzo-frnd"
+};
+const ST={going:{l:'Going',i:'fa-check'},pending:{l:'Pending',i:'fa-clock'},out:{l:'Not going',i:'fa-xmark'}};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
+function fail(e){const c=e&&e.code||'';$('msg').textContent=c==='auth/operation-not-allowed'?'Enable Anonymous sign-in in Firebase Authentication.':c.includes('api-key')?'The Firebase API key is invalid.':'Connection problem: '+(c||e.message||e);show('vLoad')}
+
+/* ---------- 2 PM cycle (Sundays skipped) ---------- */
+const P=n=>String(n).padStart(2,'0'),dk=d=>d.getFullYear()+'-'+P(d.getMonth()+1)+'-'+P(d.getDate());
+function lastB(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d>n)d.setDate(d.getDate()-1);while(d.getDay()===0)d.setDate(d.getDate()-1);return d}
+function target(){const d=lastB();d.setDate(d.getDate()+1);if(d.getDay()===0)d.setDate(d.getDate()+1);return d}
+function nextR(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d<=n)d.setDate(d.getDate()+1);while(d.getDay()===0)d.setDate(d.getDate()+1);return d}
+const cyc=()=>dk(lastB());
+// A status only counts if it was set in the current cycle; otherwise it reads as Pending.
+const eff=u=>u&&u.cycle===cyc()&&ST[u.status]?u.status:'pending';
+
+/* ---------- State ---------- */
+let db,uid,sessCode=null,sid,students=null,codes={},isAdmin=false,ready=false,pend=false;
+const subs={};
+function listen(k,path,cb){if(subs[k]&&subs[k].p===path)return;stop(k);subs[k]={p:path,off:onValue(ref(db,path),cb,e=>console.warn(path,e.code))}}
+function stop(k){if(subs[k]){subs[k].off();delete subs[k]}}
+function sync(){
+  if(sessCode)listen('me','codes/'+sessCode,s=>{sid=s.val();if(sid===null&&!pend)remove(ref(db,'sessions/'+uid));render()});else{stop('me');sid=null}
+  if(sessCode||isAdmin)listen('st','students',s=>{students=s.val()||{};render()});else{stop('st');students=null}
+  if(isAdmin)listen('cd','codes',s=>{codes=s.val()||{};render()});else{stop('cd');codes={}}
+  render();
+}
+function show(v){['vLoad','vLogin','vApp'].forEach(x=>$(x).hidden=x!==v);$('out').hidden=v!=='vApp'}
+
+/* ---------- Render ---------- */
+function render(){
+  if(!ready)return show('vLoad');
+  const authed=sessCode&&typeof sid==='string'&&students&&students[sid];
+  if(!authed)return show(sessCode&&sid===undefined?'vLoad':'vLogin');
+  show('vApp');
+  const L=Object.entries(students).sort((a,b)=>a[1].name.localeCompare(b[1].name));
+  const c={going:0,pending:0,out:0};L.forEach(([,u])=>c[eff(u)]++);
+  const td=target(),dn=td.toLocaleDateString(undefined,{weekday:'long'});
+  $('rn').textContent=c.going;$('rl').textContent='of '+L.length+' confirmed';
+  $('arc').setAttribute('stroke-dasharray',(L.length?c.going/L.length*326.7:0)+' 326.7');
+  $('dw').textContent='Attendance for';$('dd').textContent=dn+', '+td.toLocaleDateString(undefined,{day:'numeric',month:'short'});
+  $('lg').innerHTML=['going','pending','out'].map(k=>`<div class="${k}"><s style="--c:var(--${k=='going'?'go':k=='pending'?'pe':'ou'})"></s>${ST[k].l}<b>${c[k]}</b></div>`).join('');
+  const me=students[sid],m=eff(me);
+  $('sess').innerHTML=`<div class="who"><div class="av">${esc(me.name[0].toUpperCase())}</div><div class="nm">${esc(me.name)}</div><span class="pill" style="font-size:.7rem"><i class="fa-solid fa-lock-open"></i>Unlocked</span></div>
+  <div class="sg"><span class="th" style="transform:translateX(${['going','pending','out'].indexOf(m)*100}%)"></span>${['going','pending','out'].map(k=>`<button data-k="${k}" class="${m===k?'on':''}"><i class="fa-solid ${ST[k].i}"></i>${ST[k].l}</button>`).join('')}</div>`;
+  $('sess').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>update(ref(db,'students/'+sid),{status:b.dataset.k,cycle:cyc()}).catch(()=>toast('Could not save')));
+  $('list').innerHTML=L.map(([id,u])=>{const k=eff(u);return `<div class="row"><span class="av">${esc(u.name[0].toUpperCase())}</span><span class="nm">${esc(u.name)}${id===sid?'<em>You</em>':''}</span><span class="st ${k}"><s></s>${ST[k].l}</span></div>`}).join('');
+  $('note').textContent='Resets to pending every day at 2:00 PM, except Sundays. Next reset: '+nextR().toLocaleDateString(undefined,{weekday:'long'})+' 2:00 PM.';
+  if(isAdmin)renderAdmin();
+}
+
+/* ---------- Login ---------- */
+let buf='',busy=false,fails=0,lock=0;
+const dots=()=>$('dots').innerHTML=[0,1,2,3].map(i=>`<i class="${i<buf.length?'f':''}"></i>`).join('');
+$('pad').innerHTML=['1','2','3','4','5','6','7','8','9','','0','<'].map(k=>k===''?'<span></span>':`<button class="key ${k==='<'?'n':''}" data-k="${k}">${k==='<'?'<i class="fa-solid fa-delete-left"></i>':k}</button>`).join('');
+$('pad').querySelectorAll('button').forEach(b=>b.onclick=()=>key(b.dataset.k));
+document.addEventListener('keydown',e=>{if($('vLogin').hidden||$('mAdmin').classList.contains('show'))return;if(/^\d$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('<')});
+async function key(k){
+  if(busy)return;if(Date.now()<lock)return toast('Too many attempts. Try again shortly.');
+  buf=k==='<'?buf.slice(0,-1):(buf+k).slice(0,4);dots();if(buf.length<4)return;
+  busy=pend=true;const code=buf;
+  try{await set(ref(db,'sessions/'+uid),{code});sessCode=code;sid=undefined;pend=false;sync()}
+  catch{pend=false;fails++;$('dots').classList.add('shake');setTimeout(()=>$('dots').classList.remove('shake'),400);toast('Incorrect code');if(fails>=5){lock=Date.now()+30000;fails=0}}
+  busy=false;buf='';setTimeout(dots,250);
+}
+$('out').onclick=async()=>{await remove(ref(db,'sessions/'+uid)).catch(()=>{});sessCode=null;sid=null;students=null;stop('me');stop('st');render()};
+
+/* ---------- Admin ---------- */
+const M=$('mAdmin');
+$('adm').onclick=()=>{M.classList.add('show');$('aPass').value='';renderAdmin()};
+M.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>M.classList.remove('show'));
+function renderAdmin(){
+  $('aGate').hidden=isAdmin;$('aPanel').hidden=!isAdmin;if(!isAdmin)return;
+  $('aList').innerHTML=Object.entries(students||{}).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([id,u])=>{const cd=Object.keys(codes).find(k=>codes[k]===id)||'----';
+    return `<div class="ar-row"><span class="nm">${esc(u.name)}</span><code>${cd}</code><button data-c="${id}">Code</button><button data-d="${id}" style="color:var(--ou)">Delete</button></div>`}).join('')||'<p class="mu">No students yet.</p>';
+  $('aList').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const id=b.dataset.d;if(!confirm('Delete '+students[id].name+'?'))return;const cd=Object.keys(codes).find(k=>codes[k]===id);const u={['students/'+id]:null};if(cd)u['codes/'+cd]=null;update(ref(db),u).catch(()=>toast('Failed'))});
+  $('aList').querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const id=b.dataset.c,n=prompt('New 4-digit code for '+students[id].name);if(n===null)return;if(!/^\d{4}$/.test(n))return toast('Code must be 4 digits');
+    try{if((await get(ref(db,'codes/'+n))).exists())return toast('Code already in use');const old=Object.keys(codes).find(k=>codes[k]===id);const u={['codes/'+n]:id};if(old)u['codes/'+old]=null;await update(ref(db),u);toast('Code updated')}catch{toast('Failed')}});
+}
+$('aGo').onclick=async()=>{pend=true;try{await set(ref(db,'adminSessions/'+uid),$('aPass').value);isAdmin=true;pend=false;sync()}catch{pend=false;toast('Incorrect passcode')}};
+$('aPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('aGo').click()});
+$('aExit').onclick=async()=>{await remove(ref(db,'adminSessions/'+uid)).catch(()=>{});isAdmin=false;M.classList.remove('show');sync()};
+$('aAdd').onclick=async()=>{
+  const n=$('nName').value.trim(),c=$('nCode').value.trim();
+  if(!n)return toast('Enter a name');if(!/^\d{4}$/.test(c))return toast('Code must be 4 digits');
+  try{if((await get(ref(db,'codes/'+c))).exists())return toast('Code already in use');
+    const id='s'+Date.now().toString(36);await update(ref(db),{['students/'+id]:{name:n,status:'pending',cycle:'-'},['codes/'+c]:id});
+    $('nName').value=$('nCode').value='';toast(n+' added')}catch{toast('Failed to add')}
+};
+
+/* ---------- Boot ---------- */
+dots();
+if(firebaseConfig.apiKey.startsWith('PASTE')){$('msg').textContent='Setup needed: paste your Firebase Web API key into firebaseConfig at the top of the script.'}
+else{
+  const app=initializeApp(firebaseConfig);db=getDatabase(app);const auth=getAuth(app);let started=false;
+  onValue(ref(db,'.info/connected'),s=>{const l=$('live');l.classList.toggle('ok',!!s.val());l.querySelector('em').textContent=s.val()?'Live':'Offline'});
+  onAuthStateChanged(auth,u=>{
+    if(!u)return signInAnonymously(auth).catch(fail);
+    uid=u.uid;if(started)return;started=true;
+    onValue(ref(db,'sessions/'+uid),s=>{if(pend)return;const v=s.val();sessCode=v&&v.code||null;if(!sessCode)sid=null;ready=true;sync()},fail);
+    onValue(ref(db,'adminSessions/'+uid),s=>{if(pend)return;isAdmin=s.exists();sync()},()=>{});
+  });
+  setInterval(()=>{if(!$('vApp').hidden)render()},20000);
+}
+</script>
+</body>
+</html>
