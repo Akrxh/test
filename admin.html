@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#050505">
+
+<title>Frienzo Admin</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+    --bg:#050505;
+    --muted:rgba(255,255,255,.48);
+    --border:rgba(255,255,255,.13);
+    --green:#55ff91;
+    --yellow:#ffd84d;
+    --red:#ff5365;
+}
+
+html,body{
+    margin:0;
+    min-height:100%;
+    background:
+        radial-gradient(circle at 50% -15%,#292929 0,#0b0b0b 35%,#050505 72%);
+    color:white;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+    "SF Pro Text",Inter,Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+.app{
+    width:100%;
+    max-width:720px;
+    margin:auto;
+    padding:20px 16px 40px;
+}
+
+.glass{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.105),
+            rgba(255,255,255,.035)
+        );
+    border:1px solid var(--border);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 25px 70px rgba(0,0,0,.4);
+    backdrop-filter:blur(30px) saturate(130%);
+    -webkit-backdrop-filter:blur(30px) saturate(130%);
+}
+
+
+/* HEADER */
+
+.header{
+    height:48px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo{
+    width:39px;
+    height:39px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.15);
+    font-weight:800;
+}
+
+.brand-name{
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:-.6px;
+}
+
+.connection{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 10px;
+    border-radius:30px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.09);
+    color:var(--muted);
+    font-size:11px;
+}
+
+.dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--yellow);
+}
+
+.online .dot{
+    background:var(--green);
+    box-shadow:0 0 10px rgba(85,255,145,.6);
+}
+
+.offline .dot{
+    background:var(--red);
+}
+
+
+/* LOGIN */
+
+.admin-login{
+    min-height:calc(100vh - 100px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding-bottom:80px;
+}
+
+.title{
+    font-size:clamp(45px,12vw,66px);
+    letter-spacing:-4px;
+    line-height:.9;
+    margin:0;
+    font-weight:800;
+}
+
+.subtitle{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.5;
+    margin:17px 0 28px;
+}
+
+.card{
+    padding:21px;
+    border-radius:27px;
+}
+
+.label{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+    margin:0 0 8px 4px;
+}
+
+.input{
+    width:100%;
+    height:55px;
+    padding:0 16px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.12);
+    outline:none;
+    background:rgba(0,0,0,.38);
+    color:white;
+}
+
+.input:focus{
+    border-color:rgba(255,255,255,.4);
+}
+
+.primary{
+    width:100%;
+    height:55px;
+    margin-top:13px;
+    border:0;
+    border-radius:16px;
+    background:white;
+    color:black;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.error{
+    color:#ff6472;
+    min-height:18px;
+    font-size:12px;
+    margin-top:9px;
+}
+
+
+/* ADMIN */
+
+#admin{
+    display:none;
+}
+
+.admin-title{
+    margin:12px 0 5px;
+    font-size:36px;
+    letter-spacing:-1.7px;
+    font-weight:800;
+}
+
+.admin-sub{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:22px;
+}
+
+.section{
+    padding:20px;
+    border-radius:25px;
+    margin-bottom:14px;
+}
+
+.section-title{
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:17px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:11px;
+}
+
+.field{
+    min-width:0;
+}
+
+.field.full{
+    grid-column:1/-1;
+}
+
+.field-label{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+    margin:0 0 7px 3px;
+}
+
+select{
+    appearance:none;
+}
+
+.add-button{
+    width:100%;
+    height:53px;
+    margin-top:13px;
+    border:0;
+    border-radius:16px;
+    background:white;
+    color:black;
+    font-weight:700;
+    cursor:pointer;
+}
+
+
+/* ACCOUNTS */
+
+.accounts-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+}
+
+.count{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.account{
+    padding:16px;
+    border-radius:20px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.08);
+    margin-bottom:10px;
+}
+
+.account-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+}
+
+.account-name{
+    font-size:16px;
+    font-weight:700;
+}
+
+.account-code{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:4px;
+    letter-spacing:1px;
+}
+
+.account-info{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:13px;
+}
+
+.badge{
+    padding:6px 9px;
+    border-radius:30px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:10px;
+}
+
+.badge.going{
+    color:var(--green);
+}
+
+.badge.pending{
+    color:var(--yellow);
+}
+
+.badge.out{
+    color:var(--red);
+}
+
+.account-actions{
+    display:flex;
+    gap:7px;
+    margin-top:13px;
+}
+
+.small-button{
+    flex:1;
+    height:38px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.05);
+    color:white;
+    font-size:11px;
+    cursor:pointer;
+}
+
+.delete{
+    color:#ff6674;
+}
+
+.empty{
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    padding:25px 10px;
+}
+
+.logout{
+    width:100%;
+    height:50px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.04);
+    color:rgba(255,255,255,.7);
+    cursor:pointer;
+}
+
+.footer{
+    text-align:center;
+    color:rgba(255,255,255,.22);
+    font-size:9px;
+    margin-top:25px;
+    letter-spacing:.5px;
+}
+
+@media(max-width:520px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .field.full{
+        grid-column:auto;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="logo">F</div>
+
+        <div class="brand-name">
+            Frienzo
+        </div>
+
+    </div>
+
+    <div id="connection" class="connection">
+
+        <span class="dot"></span>
+
+        <span id="connectionText">
+            Connecting
+        </span>
+
+    </div>
+
+</header>
+
+
+<!-- ADMIN LOGIN -->
+
+<section id="adminLogin" class="admin-login">
+
+    <h1 class="title">
+        Admin.
+    </h1>
+
+    <p class="subtitle">
+        Manage Frienzo accounts and live student status.
+    </p>
+
+    <div class="card glass">
+
+        <label class="label">
+            ADMIN CODE
+        </label>
+
+        <input
+            id="adminCode"
+            class="input"
+            type="password"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="Enter admin code"
+        >
+
+        <button id="adminLoginBtn" class="primary">
+            Enter Dashboard
+        </button>
+
+        <div id="adminError" class="error"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ADMIN DASHBOARD -->
+
+<main id="admin">
+
+    <h1 class="admin-title">
+        Dashboard
+    </h1>
+
+    <div class="admin-sub">
+        Manage your Frienzo network.
+    </div>
+
+
+    <!-- ADD ACCOUNT -->
+
+    <section class="section glass">
+
+        <div class="section-title">
+            Add account
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field">
+
+                <label class="field-label">
+                    STUDENT NAME
+                </label>
+
+                <input
+                    id="studentName"
+                    class="input"
+                    type="text"
+                    maxlength="24"
+                    placeholder="Name"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label class="field-label">
+                    UNIQUE CODE
+                </label>
+
+                <input
+                    id="studentCode"
+                    class="input"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="6-digit code"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label class="field-label">
+                    STATUS
+                </label>
+
+                <select id="studentStatus" class="input">
+
+                    <option value="pending">
+                        Pending
+                    </option>
+
+                    <option value="going">
+                        Going
+                    </option>
+
+                    <option value="out">
+                        Out
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label class="field-label">
+                    CYCLE
+                </label>
+
+                <input
+                    id="studentCycle"
+                    class="input"
+                    maxlength="10"
+                    placeholder="Cycle 1"
+                >
+
+            </div>
+
+        </div>
+
+        <button id="addButton" class="add-button">
+            Add account
+        </button>
+
+        <div id="addError" class="error"></div>
+
+    </section>
+
+
+    <!-- ACCOUNTS -->
+
+    <section class="section glass">
+
+        <div class="accounts-header">
+
+            <div class="section-title">
+                Accounts
+            </div>
+
+            <div id="accountCount" class="count">
+                0 accounts
+            </div>
+
+        </div>
+
+        <div id="accounts">
+            <div class="empty">
+                Loading accounts…
+            </div>
+        </div>
+
+    </section>
+
+
+    <button id="logout" class="logout">
+        Exit Admin
+    </button>
+
+    <div class="footer">
+        FRIENZO • ADMIN CONSOLE
+    </div>
+
+</main>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    update,
+    remove,
+    onValue
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+/* =====================================================
+   FIREBASE CONFIG
+   ===================================================== */
+
+const firebaseConfig = {
+
+    apiKey: "YOUR_API_KEY",
+
+    authDomain:
+        "YOUR_PROJECT.firebaseapp.com",
+
+    databaseURL:
+        "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+    projectId:
+        "YOUR_PROJECT_ID",
+
+    storageBucket:
+        "YOUR_PROJECT.firebasestorage.app",
+
+    messagingSenderId:
+        "YOUR_SENDER_ID",
+
+    appId:
+        "YOUR_APP_ID"
+};
+
+
+/* =====================================================
+   ADMIN CODE
+   ===================================================== */
+
+const ADMIN_CODE = "260885";
+
+
+/* =====================================================
+   FIREBASE
+   ===================================================== */
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getDatabase(app);
+
+
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
+
+const adminLogin =
+    document.getElementById("adminLogin");
+
+const admin =
+    document.getElementById("admin");
+
+const adminCode =
+    document.getElementById("adminCode");
+
+const adminLoginBtn =
+    document.getElementById("adminLoginBtn");
+
+const adminError =
+    document.getElementById("adminError");
+
+const connection =
+    document.getElementById("connection");
+
+const connectionText =
+    document.getElementById("connectionText");
+
+const studentName =
+    document.getElementById("studentName");
+
+const studentCode =
+    document.getElementById("studentCode");
+
+const studentStatus =
+    document.getElementById("studentStatus");
+
+const studentCycle =
+    document.getElementById("studentCycle");
+
+const addButton =
+    document.getElementById("addButton");
+
+const addError =
+    document.getElementById("addError");
+
+const accounts =
+    document.getElementById("accounts");
+
+const accountCount =
+    document.getElementById("accountCount");
+
+
+/* =====================================================
+   CONNECTION
+   ===================================================== */
+
+function connectionState(state){
+
+    connection.classList.remove(
+        "online",
+        "offline"
+    );
+
+    if(state === "online"){
+
+        connection.classList.add("online");
+        connectionText.textContent = "Online";
+
+    }else if(state === "offline"){
+
+        connection.classList.add("offline");
+        connectionText.textContent = "Offline";
+
+    }else{
+
+        connectionText.textContent = "Connecting";
+
+    }
+}
+
+
+window.addEventListener(
+    "online",
+    ()=>connectionState("online")
+);
+
+window.addEventListener(
+    "offline",
+    ()=>connectionState("offline")
+);
+
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+function loginAdmin(){
+
+    adminError.textContent = "";
+
+    if(adminCode.value !== ADMIN_CODE){
+
+        adminError.textContent =
+            "Incorrect admin code.";
+
+        return;
+    }
+
+    sessionStorage.setItem(
+        "frienzo_admin",
+        "true"
+    );
+
+    adminLogin.style.display =
+        "none";
+
+    admin.style.display =
+        "block";
+
+    loadAccounts();
+}
+
+
+adminLoginBtn.addEventListener(
+    "click",
+    loginAdmin
+);
+
+adminCode.addEventListener(
+    "keydown",
+    e=>{
+        if(e.key === "Enter")
+            loginAdmin();
+    }
+);
+
+
+/* =====================================================
+   CREATE ACCOUNT
+   ===================================================== */
+
+async function addAccount(){
+
+    addError.textContent = "";
+
+    const name =
+        studentName.value.trim();
+
+    const code =
+        studentCode.value.trim();
+
+    const status =
+        studentStatus.value;
+
+    const cycle =
+        studentCycle.value.trim();
+
+
+    if(!name){
+
+        addError.textContent =
+            "Enter a student name.";
+
+        return;
+    }
+
+    if(!/^[0-9]{6}$/.test(code)){
+
+        addError.textContent =
+            "Code must contain 6 digits.";
+
+        return;
+    }
+
+
+    addButton.disabled = true;
+    addButton.textContent = "Adding…";
+
+
+    try{
+
+        const codeRef =
+            ref(db,"codes/"+code);
+
+        const existing =
+            await get(codeRef);
+
+        if(existing.exists()){
+
+            addError.textContent =
+                "This code is already being used.";
+
+            return;
+        }
+
+
+        /*
+         * Generate an internal ID.
+         */
+
+        const id =
+            "student_" +
+            Date.now();
+
+
+        /*
+         * Create code → student ID
+         */
+
+        await set(
+            codeRef,
+            id
+        );
+
+
+        /*
+         * Create student
+         */
+
+        await set(
+            ref(db,"students/"+id),
+            {
+                name:name,
+                status:status,
+                cycle:cycle || "—"
+            }
+        );
+
+
+        studentName.value = "";
+        studentCode.value = "";
+        studentCycle.value = "";
+        studentStatus.value = "pending";
+
+        addError.style.color =
+            "#55ff91";
+
+        addError.textContent =
+            "Account created successfully.";
+
+        setTimeout(()=>{
+            addError.textContent = "";
+            addError.style.color = "";
+        },2500);
+
+
+    }catch(error){
+
+        console.error(error);
+
+        addError.style.color =
+            "#ff6472";
+
+        addError.textContent =
+            "Could not create account.";
+
+    }finally{
+
+        addButton.disabled = false;
+        addButton.textContent = "Add account";
+
+    }
+}
+
+
+addButton.addEventListener(
+    "click",
+    addAccount
+);
+
+
+/* =====================================================
+   LOAD ACCOUNTS
+   ===================================================== */
+
+function loadAccounts(){
+
+    connectionState("online");
+
+    onValue(
+        ref(db,"codes"),
+
+        async snapshot=>{
+
+            const codes =
+                snapshot.val() || {};
+
+            const entries =
+                Object.entries(codes);
+
+            accountCount.textContent =
+                entries.length +
+                (entries.length === 1
+                    ? " account"
+                    : " accounts");
+
+            if(entries.length === 0){
+
+                accounts.innerHTML =
+                    `<div class="empty">
+                        No accounts yet.
+                    </div>`;
+
+                return;
+            }
+
+
+            const students = [];
+
+            for(const [code,id] of entries){
+
+                try{
+
+                    const studentSnapshot =
+                        await get(
+                            ref(db,"students/"+id)
+                        );
+
+                    if(studentSnapshot.exists()){
+
+                        students.push({
+                            code:code,
+                            id:id,
+                            data:studentSnapshot.val()
+                        });
+
+                    }
+
+                }catch(error){
+
+                    console.error(error);
+
+                }
+
+            }
+
+
+            renderAccounts(students);
+
+        },
+
+        error=>{
+
+            console.error(error);
+
+            connectionState("offline");
+
+            accounts.innerHTML =
+                `<div class="empty">
+                    Unable to load accounts.
+                </div>`;
+
+        }
+    );
+}
+
+
+/* =====================================================
+   RENDER ACCOUNTS
+   ===================================================== */
+
+function renderAccounts(list){
+
+    accounts.innerHTML = "";
+
+    list.forEach(item=>{
+
+        const data =
+            item.data;
+
+        const status =
+            data.status || "pending";
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "account";
+
+
+        card.innerHTML = `
+
+            <div class="account-top">
+
+                <div>
+
+                    <div class="account-name">
+                        ${escapeHTML(data.name || "Unknown")}
+                    </div>
+
+                    <div class="account-code">
+                        ${item.code}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="account-info">
+
+                <div class="badge ${status}">
+                    ${capitalize(status)}
+                </div>
+
+                <div class="badge">
+                    ${escapeHTML(data.cycle || "—")}
+                </div>
+
+            </div>
+
+            <div class="account-actions">
+
+                <button
+                    class="small-button"
+                    data-action="going">
+                    Going
+                </button>
+
+                <button
+                    class="small-button"
+                    data-action="pending">
+                    Pending
+                </button>
+
+                <button
+                    class="small-button"
+                    data-action="out">
+                    Out
+                </button>
+
+                <button
+                    class="small-button delete"
+                    data-action="delete">
+                    Delete
+                </button>
+
+            </div>
+        `;
+
+
+        card.querySelectorAll(
+            "[data-action]"
+        ).forEach(button=>{
+
+            button.addEventListener(
+                "click",
+                ()=>{
+
+                    const action =
+                        button.dataset.action;
+
+                    if(action === "delete"){
+
+                        deleteAccount(
+                            item.code,
+                            item
