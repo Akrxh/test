@@ -2,1217 +2,1008 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#050505">
 <title>Frienzo</title>
 
 <style>
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
 :root{
-  --bg:#08090d;
-  --panel:#11131a;
-  --panel2:#171a23;
-  --line:#292e3a;
-  --text:#f4f6fb;
-  --muted:#8992a3;
-  --accent:#ff365f;
-  --accent2:#ff7043;
-  --green:#50d890;
-  --yellow:#ffc857;
-  --red:#ff5570;
-  --radius:16px;
+    --bg:#050505;
+    --white:#fff;
+    --muted:rgba(255,255,255,.48);
+    --glass:rgba(255,255,255,.065);
+    --glass2:rgba(255,255,255,.095);
+    --border:rgba(255,255,255,.13);
+    --green:#55ff91;
+    --yellow:#ffd84d;
+    --red:#ff5365;
 }
 
-*{box-sizing:border-box;margin:0}
+html,body{
+    margin:0;
+    min-height:100%;
+    background:
+        radial-gradient(circle at 50% -15%,#292929 0,#0c0c0c 32%,#050505 72%);
+    color:white;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+    "SF Pro Text",Inter,Arial,sans-serif;
+}
+
 body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:
-    radial-gradient(circle at 20% 0%,rgba(255,54,95,.14),transparent 35%),
-    radial-gradient(circle at 100% 100%,rgba(255,112,67,.10),transparent 35%),
-    var(--bg);
-  color:var(--text);
-  min-height:100vh;
+    min-height:100vh;
 }
 
-button,input,select{font:inherit}
-button{cursor:pointer}
-
-.hidden{display:none!important}
-
-.screen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
+button,input{
+    font:inherit;
 }
 
-.auth{
-  width:100%;
-  max-width:390px;
-  background:linear-gradient(145deg,var(--panel2),var(--panel));
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:30px;
-  box-shadow:0 25px 80px rgba(0,0,0,.45);
+.app{
+    width:100%;
+    max-width:560px;
+    min-height:100vh;
+    margin:auto;
+    padding:20px 17px 35px;
+}
+
+.glass{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.105),
+            rgba(255,255,255,.035)
+        );
+    border:1px solid var(--border);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 25px 70px rgba(0,0,0,.4);
+    backdrop-filter:blur(30px) saturate(130%);
+    -webkit-backdrop-filter:blur(30px) saturate(130%);
+}
+
+/* HEADER */
+
+.header{
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:28px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
 }
 
 .logo{
-  text-align:center;
-  font-size:32px;
-  font-weight:800;
-  letter-spacing:.04em;
-  margin-bottom:8px;
+    width:39px;
+    height:39px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:13px;
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.15);
+    font-size:18px;
+    font-weight:800;
 }
 
-.logo span{
-  color:var(--accent);
-}
-
-.subtitle{
-  text-align:center;
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:28px;
-}
-
-label{
-  display:block;
-  color:var(--muted);
-  font-size:12px;
-  margin:16px 0 7px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-}
-
-input,select{
-  width:100%;
-  padding:13px 14px;
-  border:1px solid var(--line);
-  background:#0b0d12;
-  color:var(--text);
-  border-radius:11px;
-  outline:none;
-}
-
-input:focus,select:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(255,54,95,.12);
-}
-
-.btn{
-  width:100%;
-  border:0;
-  border-radius:11px;
-  padding:13px;
-  margin-top:18px;
-  color:white;
-  font-weight:700;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-}
-
-.btn:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-}
-
-.error{
-  color:var(--red);
-  font-size:13px;
-  margin-top:12px;
-  min-height:18px;
-  text-align:center;
+.brand-name{
+    font-size:21px;
+    font-weight:700;
+    letter-spacing:-.7px;
 }
 
 .connection{
-  text-align:center;
-  margin-top:18px;
-  color:var(--muted);
-  font-size:12px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 10px;
+    border-radius:30px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.09);
+    color:var(--muted);
+    font-size:11px;
 }
 
 .dot{
-  display:inline-block;
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:var(--yellow);
-  margin-right:6px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--yellow);
 }
 
-.dot.online{background:var(--green)}
-.dot.offline{background:var(--red)}
-
-.app{
-  min-height:100vh;
+.connection.online .dot{
+    background:var(--green);
+    box-shadow:0 0 10px rgba(85,255,145,.6);
 }
 
-.topbar{
-  height:70px;
-  border-bottom:1px solid var(--line);
-  background:rgba(8,9,13,.88);
-  backdrop-filter:blur(14px);
-  display:flex;
-  align-items:center;
-  padding:0 20px;
-  position:sticky;
-  top:0;
-  z-index:20;
+.connection.offline .dot{
+    background:var(--red);
 }
 
-.toplogo{
-  font-weight:800;
-  font-size:21px;
+/* LOGIN */
+
+.login{
+    min-height:calc(100vh - 110px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding-bottom:70px;
 }
 
-.toplogo span{
-  color:var(--accent);
+.hero-title{
+    margin:0;
+    font-size:clamp(48px,13vw,70px);
+    line-height:.9;
+    letter-spacing:-4px;
+    font-weight:800;
 }
 
-.topright{
-  margin-left:auto;
-  display:flex;
-  align-items:center;
-  gap:10px;
+.hero-subtitle{
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.5;
+    max-width:390px;
+    margin:18px 0 30px;
 }
 
-.role{
-  padding:6px 10px;
-  border-radius:8px;
-  background:var(--panel2);
-  color:var(--muted);
-  font-size:12px;
+.login-card{
+    padding:21px;
+    border-radius:28px;
 }
 
-.logout{
-  border:1px solid var(--line);
-  background:transparent;
-  color:var(--text);
-  border-radius:9px;
-  padding:8px 11px;
+.label{
+    display:block;
+    margin:0 0 9px 4px;
+    color:var(--muted);
+    font-size:11px;
+    letter-spacing:.5px;
 }
 
-.container{
-  width:min(1100px,100%);
-  margin:auto;
-  padding:24px 18px 60px;
+.code{
+    width:100%;
+    height:61px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.13);
+    outline:none;
+    background:rgba(0,0,0,.38);
+    color:white;
+    text-align:center;
+    letter-spacing:9px;
+    font-size:25px;
+    font-weight:700;
 }
 
-.hero{
-  margin-bottom:22px;
+.code:focus{
+    border-color:rgba(255,255,255,.4);
+    box-shadow:0 0 0 4px rgba(255,255,255,.045);
 }
 
-.hero h1{
-  font-size:30px;
-  margin-bottom:6px;
+.primary{
+    width:100%;
+    height:57px;
+    margin-top:14px;
+    border:0;
+    border-radius:17px;
+    background:white;
+    color:black;
+    font-weight:700;
+    cursor:pointer;
 }
 
-.hero p{
-  color:var(--muted);
+.primary:active{
+    transform:scale(.985);
+}
+
+.error{
+    min-height:18px;
+    margin:10px 3px 0;
+    color:#ff6271;
+    font-size:12px;
+}
+
+/* DASHBOARD */
+
+#dashboard{
+    display:none;
+}
+
+.welcome{
+    margin:15px 0 22px;
+}
+
+.small{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:5px;
+}
+
+.name{
+    font-size:35px;
+    line-height:1;
+    letter-spacing:-1.7px;
+    font-weight:780;
+}
+
+.status-card{
+    padding:22px;
+    border-radius:28px;
+    margin-bottom:13px;
+}
+
+.status-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.status-label{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.pill{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 11px;
+    border-radius:50px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);
+    font-size:11px;
+    font-weight:600;
+}
+
+.pill-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+}
+
+.going .pill-dot{
+    background:var(--green);
+}
+
+.pending .pill-dot{
+    background:var(--yellow);
+}
+
+.out .pill-dot{
+    background:var(--red);
+}
+
+.status-value{
+    margin-top:24px;
+    font-size:43px;
+    letter-spacing:-2px;
+    font-weight:800;
 }
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:15px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
 }
 
-.card{
-  background:linear-gradient(145deg,var(--panel2),var(--panel));
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:19px;
+.info{
+    padding:19px;
+    border-radius:23px;
 }
 
-.card h2{
-  font-size:16px;
-  margin-bottom:15px;
+.info-label{
+    color:var(--muted);
+    font-size:10px;
+    margin-bottom:9px;
 }
 
-.stat{
-  font-size:30px;
-  font-weight:800;
+.info-value{
+    font-size:18px;
+    font-weight:650;
+    word-break:break-word;
 }
 
-.muted{
-  color:var(--muted);
+.sync{
+    margin-top:13px;
+    padding:16px 18px;
+    border-radius:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-.status{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:6px 10px;
-  border-radius:8px;
-  font-size:12px;
-  font-weight:700;
+.sync-title{
+    font-size:13px;
+    font-weight:600;
 }
 
-.status.going{
-  color:var(--green);
-  background:rgba(80,216,144,.10);
+.sync-time{
+    color:var(--muted);
+    font-size:10px;
+    margin-top:4px;
 }
 
-.status.pending{
-  color:var(--yellow);
-  background:rgba(255,200,87,.10);
+.sync-icon{
+    width:35px;
+    height:35px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:rgba(255,255,255,.07);
 }
 
-.status.out{
-  color:var(--red);
-  background:rgba(255,85,112,.10);
+.logout{
+    width:100%;
+    height:51px;
+    margin-top:23px;
+    border-radius:17px;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.045);
+    color:rgba(255,255,255,.72);
+    cursor:pointer;
 }
 
-.student{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  padding:14px 0;
-  border-bottom:1px solid var(--line);
+.footer{
+    text-align:center;
+    color:rgba(255,255,255,.22);
+    font-size:9px;
+    letter-spacing:.6px;
+    margin-top:27px;
 }
 
-.student:last-child{
-  border-bottom:0;
-}
+@media(max-width:390px){
+    .app{
+        padding-left:14px;
+        padding-right:14px;
+    }
 
-.avatar{
-  width:42px;
-  height:42px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  font-weight:800;
-}
+    .name{
+        font-size:31px;
+    }
 
-.student-main{
-  flex:1;
-}
-
-.student-name{
-  font-weight:700;
-}
-
-.student-cycle{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:3px;
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.small-btn{
-  border:1px solid var(--line);
-  background:var(--panel2);
-  color:var(--text);
-  border-radius:9px;
-  padding:8px 10px;
-  font-size:12px;
-}
-
-.small-btn.danger{
-  color:var(--red);
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:10px;
-}
-
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:30px 10px;
-}
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:25px;
-  transform:translateX(-50%);
-  background:var(--panel2);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px 17px;
-  z-index:100;
-  box-shadow:0 15px 40px rgba(0,0,0,.4);
-}
-
-.offline-banner{
-  background:#2a171b;
-  color:#ff9aaa;
-  border-bottom:1px solid #4a252d;
-  text-align:center;
-  padding:8px;
-  font-size:12px;
-}
-
-@media(max-width:600px){
-  .auth{padding:24px}
-  .topbar{padding:0 14px}
-  .role{display:none}
+    .status-value{
+        font-size:38px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<section id="loginScreen" class="screen">
-  <div class="auth">
+<div class="app">
 
-    <div class="logo">FRI<span>ENZO</span></div>
-    <div class="subtitle">Connect using your unique access code</div>
+    <header class="header">
 
-    <label for="code">Access Code</label>
-    <input
-      id="code"
-      inputmode="numeric"
-      autocomplete="one-time-code"
-      maxlength="6"
-      placeholder="Enter your code"
-    >
-
-    <button id="loginBtn" class="btn">
-      Connect
-    </button>
-
-    <div id="loginError" class="error"></div>
-
-    <div class="connection">
-      <span id="connectionDot" class="dot"></span>
-      <span id="connectionText">Connecting to server...</span>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- APP -->
-<div id="app" class="app hidden">
-
-  <div id="offlineBanner" class="offline-banner hidden">
-    Server unavailable — showing locally cached data.
-  </div>
-
-  <header class="topbar">
-
-    <div class="toplogo">
-      FRI<span>ENZO</span>
-    </div>
-
-    <div class="topright">
-      <span id="roleBadge" class="role"></span>
-      <button id="logoutBtn" class="logout">Logout</button>
-    </div>
-
-  </header>
-
-  <main class="container">
-
-    <section class="hero">
-      <h1 id="welcome">Welcome</h1>
-      <p id="heroText">Your Frienzo dashboard</p>
-    </section>
-
-    <!-- STUDENT -->
-    <section id="studentView" class="hidden">
-
-      <div class="grid">
-
-        <div class="card">
-          <div class="muted">Name</div>
-          <div id="studentName" class="stat">—</div>
+        <div class="brand">
+            <div class="logo">F</div>
+            <div class="brand-name">Frienzo</div>
         </div>
 
-        <div class="card">
-          <div class="muted">Cycle</div>
-          <div id="studentCycle" class="stat">—</div>
+        <div id="connection" class="connection">
+            <span class="dot"></span>
+            <span id="connectionText">Connecting</span>
         </div>
 
-        <div class="card">
-          <div class="muted">Current Status</div>
-          <div id="studentStatus" style="margin-top:10px">—</div>
-        </div>
-
-      </div>
-
-    </section>
+    </header>
 
 
-    <!-- ADMIN -->
-    <section id="adminView" class="hidden">
+    <!-- LOGIN -->
 
-      <div class="grid">
+    <section id="login" class="login">
 
-        <div class="card">
-          <div class="muted">Students</div>
-          <div id="studentCount" class="stat">0</div>
-        </div>
+        <h1 class="hero-title">Welcome.</h1>
 
-        <div class="card">
-          <div class="muted">Going</div>
-          <div id="goingCount" class="stat">0</div>
-        </div>
+        <p class="hero-subtitle">
+            Enter your unique Frienzo code to access your account.
+        </p>
 
-        <div class="card">
-          <div class="muted">Pending</div>
-          <div id="pendingCount" class="stat">0</div>
-        </div>
+        <div class="login-card glass">
 
-        <div class="card">
-          <div class="muted">Out</div>
-          <div id="outCount" class="stat">0</div>
-        </div>
+            <label class="label">
+                UNIQUE CODE
+            </label>
 
-      </div>
-
-      <div class="card" style="margin-top:16px">
-
-        <h2>Add Account</h2>
-
-        <div class="form-grid">
-
-          <div>
-            <label>Name</label>
-            <input id="newName" maxlength="24" placeholder="Student name">
-          </div>
-
-          <div>
-            <label>Unique Code</label>
             <input
-              id="newCode"
-              inputmode="numeric"
-              maxlength="6"
-              placeholder="6 digit code"
+                id="codeInput"
+                class="code"
+                type="text"
+                inputmode="numeric"
+                maxlength="6"
+                placeholder="••••••"
+                autocomplete="off"
             >
-          </div>
 
-          <div>
-            <label>Cycle</label>
-            <input id="newCycle" maxlength="10" placeholder="A / B / C">
-          </div>
+            <button id="loginBtn" class="primary">
+                Continue
+            </button>
+
+            <div id="error" class="error"></div>
 
         </div>
 
-        <button id="addBtn" class="btn">
-          Add Account
+    </section>
+
+
+    <!-- DASHBOARD -->
+
+    <main id="dashboard">
+
+        <div class="welcome">
+            <div class="small">Welcome back</div>
+            <div id="studentName" class="name">—</div>
+        </div>
+
+
+        <section class="status-card glass">
+
+            <div class="status-head">
+
+                <div class="status-label">
+                    CURRENT STATUS
+                </div>
+
+                <div id="statusPill" class="pill pending">
+
+                    <span class="pill-dot"></span>
+                    <span id="statusPillText">Pending</span>
+
+                </div>
+
+            </div>
+
+            <div id="statusValue" class="status-value">
+                Pending
+            </div>
+
+        </section>
+
+
+        <section class="grid">
+
+            <div class="info glass">
+                <div class="info-label">CYCLE</div>
+                <div id="cycle" class="info-value">—</div>
+            </div>
+
+            <div class="info glass">
+                <div class="info-label">ACCOUNT</div>
+                <div class="info-value">Active</div>
+            </div>
+
+        </section>
+
+
+        <section class="sync glass">
+
+            <div>
+                <div class="sync-title">Synchronization</div>
+                <div id="syncTime" class="sync-time">
+                    Connecting to server…
+                </div>
+            </div>
+
+            <div class="sync-icon">↻</div>
+
+        </section>
+
+
+        <button id="logout" class="logout">
+            Sign out
         </button>
 
-      </div>
+        <div class="footer">
+            FRIENZO • PRIVATE STUDENT NETWORK
+        </div>
 
-
-      <div class="card" style="margin-top:16px">
-
-        <h2>Accounts & Status</h2>
-
-        <div id="studentsList"></div>
-
-      </div>
-
-    </section>
-
-  </main>
+    </main>
 
 </div>
 
 
-<!-- Firebase -->
 <script type="module">
 
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
 import {
-  getAuth,
-  signInAnonymously,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-import {
-  getDatabase,
-  ref,
-  get,
-  set,
-  update,
-  remove,
-  onValue,
-  off
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+    getDatabase,
+    ref,
+    get,
+    onValue
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
 
-/* =========================================================
-   FIREBASE CONFIG
-   Replace these with YOUR Firebase project's values.
-   ========================================================= */
+/* =====================================================
+   PUT YOUR FIREBASE CONFIG HERE
+   ===================================================== */
 
 const firebaseConfig = {
 
-  apiKey: "YOUR_FIREBASE_API_KEY",
+    apiKey: "YOUR_API_KEY",
 
-  authDomain:
-    "YOUR_PROJECT.firebaseapp.com",
+    authDomain:
+        "YOUR_PROJECT.firebaseapp.com",
 
-  databaseURL:
-    "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
+    databaseURL:
+        "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
 
-  projectId:
-    "YOUR_PROJECT",
+    projectId:
+        "YOUR_PROJECT_ID",
 
-  storageBucket:
-    "YOUR_PROJECT.firebasestorage.app",
+    storageBucket:
+        "YOUR_PROJECT.firebasestorage.app",
 
-  messagingSenderId:
-    "YOUR_MESSAGING_SENDER_ID",
+    messagingSenderId:
+        "YOUR_SENDER_ID",
 
-  appId:
-    "YOUR_FIREBASE_APP_ID"
+    appId:
+        "YOUR_APP_ID"
 };
 
 
-/* =========================================================
-   APP SETTINGS
-   ========================================================= */
+/* =====================================================
+   FIREBASE
+   ===================================================== */
 
-const ADMIN_CODE = "260885";
+const app =
+    initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-let firebaseUser = null;
-let currentCode = null;
-let currentStudentId = null;
-let currentRole = null;
-let studentsListener = null;
+const db =
+    getDatabase(app);
 
 
-/* =========================================================
-   DOM
-   ========================================================= */
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
 
-const $ = id => document.getElementById(id);
+const login =
+    document.getElementById("login");
 
-const loginScreen = $("loginScreen");
-const appScreen = $("app");
+const dashboard =
+    document.getElementById("dashboard");
 
-const codeInput = $("code");
-const loginBtn = $("loginBtn");
-const loginError = $("loginError");
+const codeInput =
+    document.getElementById("codeInput");
 
-const connectionDot = $("connectionDot");
-const connectionText = $("connectionText");
+const loginBtn =
+    document.getElementById("loginBtn");
 
-const offlineBanner = $("offlineBanner");
+const error =
+    document.getElementById("error");
 
-const studentView = $("studentView");
-const adminView = $("adminView");
+const connection =
+    document.getElementById("connection");
+
+const connectionText =
+    document.getElementById("connectionText");
+
+const studentName =
+    document.getElementById("studentName");
+
+const statusPill =
+    document.getElementById("statusPill");
+
+const statusPillText =
+    document.getElementById("statusPillText");
+
+const statusValue =
+    document.getElementById("statusValue");
+
+const cycle =
+    document.getElementById("cycle");
+
+const syncTime =
+    document.getElementById("syncTime");
 
 
-/* =========================================================
-   CONNECTION STATUS
-   ========================================================= */
+/* =====================================================
+   CONNECTION
+   ===================================================== */
 
-function setConnection(online, text){
+function connectionState(state){
 
-  connectionDot.classList.toggle("online", online);
-  connectionDot.classList.toggle("offline", !online);
+    connection.classList.remove(
+        "online",
+        "offline"
+    );
 
-  connectionText.textContent = text;
+    if(state === "online"){
 
-  offlineBanner.classList.toggle(
-    "hidden",
-    online
-  );
+        connection.classList.add("online");
+        connectionText.textContent = "Online";
+
+    }else if(state === "offline"){
+
+        connection.classList.add("offline");
+        connectionText.textContent = "Offline";
+
+    }else{
+
+        connectionText.textContent = "Connecting";
+
+    }
 }
 
 
-window.addEventListener("online", () => {
-
-  setConnection(true, "Connected to server");
-
-  if(firebaseUser && currentRole === "admin"){
-    loadAdmin();
-  }
-
+window.addEventListener("online",()=>{
+    connectionState("online");
 });
 
-window.addEventListener("offline", () => {
-
-  setConnection(false, "Offline");
-
+window.addEventListener("offline",()=>{
+    connectionState("offline");
 });
 
 
-/* =========================================================
-   TOAST
-   ========================================================= */
+/* =====================================================
+   CACHE
+   ===================================================== */
 
-function toast(message){
+function saveSession(code,id){
 
-  const el = document.createElement("div");
-
-  el.className = "toast";
-  el.textContent = message;
-
-  document.body.appendChild(el);
-
-  setTimeout(() => el.remove(), 2400);
-}
-
-
-/* =========================================================
-   LOCAL CACHE
-   ========================================================= */
-
-function cacheSet(key, value){
-
-  try{
     localStorage.setItem(
-      key,
-      JSON.stringify(value)
-    );
-  }catch{}
-}
-
-
-function cacheGet(key){
-
-  try{
-
-    const value =
-      localStorage.getItem(key);
-
-    return value
-      ? JSON.parse(value)
-      : null;
-
-  }catch{
-
-    return null;
-
-  }
-}
-
-
-/* =========================================================
-   AUTOMATIC FIREBASE AUTHENTICATION
-   ========================================================= */
-
-async function ensureFirebaseConnection(){
-
-  setConnection(
-    navigator.onLine,
-    navigator.onLine
-      ? "Connecting to server..."
-      : "Offline"
-  );
-
-  if(!navigator.onLine){
-
-    const cached =
-      cacheGet("frienzo_session");
-
-    if(cached){
-
-      currentCode = cached.code;
-      currentRole = cached.role;
-      currentStudentId = cached.studentId;
-
-      openApp();
-
-      if(currentRole === "admin"){
-        loadAdmin();
-      }else{
-        loadStudent();
-      }
-
-    }
-
-    return;
-
-  }
-
-  try{
-
-    /*
-      Firebase anonymous authentication happens
-      automatically. The user never sees a
-      Firebase login screen.
-    */
-
-    if(!auth.currentUser){
-
-      await signInAnonymously(auth);
-
-    }
-
-  }catch(error){
-
-    console.error(error);
-
-    setConnection(
-      false,
-      "Server connection failed"
-    );
-
-    const cached =
-      cacheGet("frienzo_session");
-
-    if(cached){
-
-      currentCode = cached.code;
-      currentRole = cached.role;
-      currentStudentId = cached.studentId;
-
-      openApp();
-
-      if(currentRole === "admin"){
-        loadAdmin();
-      }else{
-        loadStudent();
-      }
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   FIREBASE AUTH STATE
-   ========================================================= */
-
-onAuthStateChanged(auth, user => {
-
-  if(user){
-
-    firebaseUser = user;
-
-    setConnection(
-      navigator.onLine,
-      navigator.onLine
-        ? "Connected to server"
-        : "Offline"
-    );
-
-  }
-
-});
-
-
-/* =========================================================
-   LOGIN
-   ========================================================= */
-
-loginBtn.addEventListener("click", login);
-
-codeInput.addEventListener("keydown", e => {
-
-  if(e.key === "Enter"){
-    login();
-  }
-
-});
-
-
-async function login(){
-
-  loginError.textContent = "";
-
-  const code =
-    codeInput.value.trim();
-
-  if(!/^[0-9]{6}$/.test(code)){
-
-    loginError.textContent =
-      "Enter a valid 6-digit code.";
-
-    return;
-
-  }
-
-
-  loginBtn.disabled = true;
-  loginBtn.textContent = "Connecting...";
-
-
-  try{
-
-    /*
-      ADMIN
-
-      The admin code is recognized by the
-      application. Firebase authentication
-      is still required before database access.
-    */
-
-    if(code === ADMIN_CODE){
-
-      if(!firebaseUser){
-
-        if(!navigator.onLine){
-
-          cacheSet(
-            "frienzo_session",
-            {
-              code,
-              role:"admin",
-              studentId:null
-            }
-          );
-
-          currentCode = code;
-          currentRole = "admin";
-          currentStudentId = null;
-
-          openApp();
-          loadAdmin();
-
-          return;
-
-        }
-
-        await signInAnonymously(auth);
-
-      }
-
-      currentCode = code;
-      currentRole = "admin";
-      currentStudentId = null;
-
-      cacheSet(
         "frienzo_session",
-        {
-          code,
-          role:"admin",
-          studentId:null
-        }
-      );
+        JSON.stringify({
+            code:code,
+            id:id
+        })
+    );
+}
 
-      openApp();
-      loadAdmin();
+function getSession(){
 
-      return;
-
-    }
-
-
-    /*
-      STUDENT LOGIN
-    */
-
-    if(!firebaseUser){
-
-      if(!navigator.onLine){
-
-        const cached =
-          cacheGet("frienzo_session");
-
-        if(cached && cached.code === code){
-
-          currentCode = code;
-          currentRole = "student";
-          currentStudentId =
-            cached.studentId;
-
-          openApp();
-          loadStudent();
-
-          return;
-
-        }
-
-        throw new Error(
-          "This code has not been cached on this device."
+    try{
+        return JSON.parse(
+            localStorage.getItem("frienzo_session")
         );
-
-      }
-
-      await signInAnonymously(auth);
-
+    }catch{
+        return null;
     }
+}
 
+function saveCache(data){
 
-    const codeSnap =
-      await get(
-        ref(db, "codes/" + code)
-      );
-
-
-    if(!codeSnap.exists()){
-
-      throw new Error(
-        "Invalid access code."
-      );
-
-    }
-
-
-    const studentId =
-      codeSnap.val();
-
-
-    const studentSnap =
-      await get(
-        ref(db, "students/" + studentId)
-      );
-
-
-    if(!studentSnap.exists()){
-
-      throw new Error(
-        "Account not found."
-      );
-
-    }
-
-
-    currentCode = code;
-    currentRole = "student";
-    currentStudentId = studentId;
-
-
-    cacheSet(
-      "frienzo_session",
-      {
-        code,
-        role:"student",
-        studentId
-      }
+    localStorage.setItem(
+        "frienzo_cache",
+        JSON.stringify(data)
     );
+}
+
+function getCache(){
+
+    try{
+        return JSON.parse(
+            localStorage.getItem("frienzo_cache")
+        );
+    }catch{
+        return null;
+    }
+}
 
 
-    openApp();
-    loadStudent();
+/* =====================================================
+   RENDER
+   ===================================================== */
 
+function render(data){
 
-  }catch(error){
+    if(!data) return;
 
-    console.error(error);
+    studentName.textContent =
+        data.name || "Unknown";
 
-    loginError.textContent =
-      error.message ||
-      "Unable to connect.";
+    cycle.textContent =
+        data.cycle || "—";
 
-  }finally{
+    const status =
+        data.status || "pending";
 
-    loginBtn.disabled = false;
-    loginBtn.textContent = "Connect";
+    statusPill.className =
+        "pill " + status;
 
-  }
+    if(status === "going"){
+
+        statusPillText.textContent = "Going";
+        statusValue.textContent = "Going";
+
+    }else if(status === "out"){
+
+        statusPillText.textContent = "Out";
+        statusValue.textContent = "Out";
+
+    }else{
+
+        statusPillText.textContent = "Pending";
+        statusValue.textContent = "Pending";
+
+    }
+
+    syncTime.textContent =
+        "Synced just now";
 
 }
 
 
-/* =========================================================
-   OPEN APP
-   ========================================================= */
+/* =====================================================
+   LOAD STUDENT
+   ===================================================== */
 
-function openApp(){
+function watchStudent(id){
 
-  loginScreen.classList.add("hidden");
-  appScreen.classList.remove("hidden");
-
-  $("roleBadge").textContent =
-    currentRole === "admin"
-      ? "ADMIN"
-      : "STUDENT";
-
-}
-
-
-/* =========================================================
-   STUDENT
-   ========================================================= */
-
-async function loadStudent(){
-
-  studentView.classList.remove("hidden");
-  adminView.classList.add("hidden");
-
-  $("welcome").textContent =
-    "Welcome";
-
-  $("heroText").textContent =
-    "Your Frienzo account";
-
-
-  if(!navigator.onLine){
-
-    const cached =
-      cacheGet(
-        "frienzo_student_" +
-        currentStudentId
-      );
-
-    if(cached){
-
-      renderStudent(cached);
-
-    }
-
-    return;
-
-  }
-
-
-  try{
-
-    const snap =
-      await get(
-        ref(
-          db,
-          "students/" +
-          currentStudentId
-        )
-      );
-
-
-    if(!snap.exists()){
-
-      toast("Account no longer exists.");
-      logout();
-
-      return;
-
-    }
-
-
-    const data = snap.val();
-
-    cacheSet(
-      "frienzo_student_" +
-      currentStudentId,
-      data
-    );
-
-    renderStudent(data);
-
-
-    /*
-      Live status updates.
-    */
+    const studentRef =
+        ref(db,"students/"+id);
 
     onValue(
-      ref(
-        db,
-        "students/" +
-        currentStudentId
-      ),
-      snap => {
+        studentRef,
 
-        if(snap.exists()){
+        snapshot=>{
 
-          const data = snap.val();
+            connectionState("online");
 
-          cacheSet(
-            "frienzo_student_" +
-            currentStudentId,
-            data
-          );
+            if(!snapshot.exists()){
 
-          renderStudent(data);
+                error.textContent =
+                    "This account no longer exists.";
+
+                return;
+            }
+
+            const data =
+                snapshot.val();
+
+            saveCache(data);
+            render(data);
+
+            syncTime.textContent =
+                "Live • Updated just now";
+
+        },
+
+        ()=>{
+            connectionState("offline");
+
+            syncTime.textContent =
+                "Offline • using saved data";
+        }
+    );
+}
+
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+async function loginUser(){
+
+    error.textContent = "";
+
+    const code =
+        codeInput.value.trim();
+
+    if(!/^[0-9]{6}$/.test(code)){
+
+        error.textContent =
+            "Enter your 6-digit code.";
+
+        return;
+    }
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Checking…";
+
+    try{
+
+        const codeRef =
+            ref(db,"codes/"+code);
+
+        const snapshot =
+            await get(codeRef);
+
+        if(!snapshot.exists()){
+
+            error.textContent =
+                "Invalid code.";
+
+            return;
+        }
+
+        const id =
+            snapshot.val();
+
+        if(typeof id !== "string"){
+
+            error.textContent =
+                "Invalid account.";
+
+            return;
+        }
+
+        saveSession(code,id);
+
+        const studentRef =
+            ref(db,"students/"+id);
+
+        const studentSnapshot =
+            await get(studentRef);
+
+        if(!studentSnapshot.exists()){
+
+            error.textContent =
+                "Student account not found.";
+
+            return;
+        }
+
+        const data =
+            studentSnapshot.val();
+
+        saveCache(data);
+        render(data);
+
+        login.style.display = "none";
+        dashboard.style.display = "block";
+
+        connectionState("online");
+
+        watchStudent(id);
+
+    }catch(err){
+
+        console.error(err);
+
+        connectionState("offline");
+
+        const cached =
+            getCache();
+
+        if(cached){
+
+            render(cached);
+
+            login.style.display = "none";
+            dashboard.style.display = "block";
+
+            syncTime.textContent =
+                "Offline • cached data";
+
+        }else{
+
+            error.textContent =
+                "Unable to connect to Firebase.";
 
         }
 
-      }
-    );
+    }finally{
 
-  }catch(error){
-
-    console.error(error);
-
-    const cached =
-      cacheGet(
-        "frienzo_student_" +
-        currentStudentId
-      );
-
-    if(cached){
-
-      renderStudent(cached);
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Continue";
 
     }
-
-  }
-
 }
 
 
-function renderStudent(data){
+/* =====================================================
+   RESTORE SESSION
+   ===================================================== */
 
-  $("studentName").textContent =
-    data.name || "Unknown";
+async function restoreSession(){
 
-  $("studentCycle").textContent =
-    data.cycle || "—";
+    const session =
+        getSession();
 
-  $("studentStatus").innerHTML =
-    statusHTML(
-      data.status
-    );
+    if(!session || !session.id)
+        return;
 
-  $("welcome").textContent =
-    "Welcome, " +
-    (data.name || "Student");
+    try{
 
+        const studentRef =
+            ref(db,"students/"+session.id);
+
+        const snapshot =
+            await get(studentRef);
+
+        if(snapshot.exists()){
+
+            const data =
+                snapshot.val();
+
+            saveCache(data);
+            render(data);
+
+            login.style.display = "none";
+            dashboard.style.display = "block";
+
+            connectionState("online");
+
+            watchStudent(session.id);
+
+        }
+
+    }catch{
+
+        const cached =
+            getCache();
+
+        if(cached){
+
+            render(cached);
+
+            login.style.display = "none";
+            dashboard.style.display = "block";
+
+            connectionState("offline");
+
+            syncTime.textContent =
+                "Offline • cached data";
+        }
+    }
 }
 
 
-function statusHTML(status){
+/* =====================================================
+   EVENTS
+   ===================================================== */
 
-  const names = {
-    going:"Going",
-    pending:"Pending",
-    out:"Out"
-  };
+loginBtn.addEventListener(
+    "click",
+    loginUser
+);
 
-  const icons = {
-    going:"●",
-    pending:"●",
-    out:"●"
-  };
+codeInput.addEventListener(
+    "keydown",
+    e=>{
+        if(e.key === "Enter")
+            loginUser();
+    }
+);
 
-  const safe =
-    names[status]
-      ? status
-      : "pending";
+document
+.getElementById("logout")
+.addEventListener(
+    "click",
+    ()=>{
 
-  return `
-    <span class="status ${safe}">
-      ${icons[safe]}
-      ${names[safe]}
-    </span>
-  `;
+        localStorage.removeItem(
+            "frienzo_session"
+        );
 
-}
+        localStorage.removeItem(
+            "frienzo_cache"
+        );
 
+        dashboard.style.display =
+            "none";
 
-/* =========================================================
-   ADMIN
-   ========================================================= */
+        login.style.display =
+            "flex";
 
-async function loadAdmin(){
+        codeInput.value = "";
+        error.textContent = "";
 
-  studentView.classList.add("hidden");
-  adminView.classList.remove("hidden");
-
-  $("welcome").textContent =
-    "Admin Dashboard";
-
-  $("heroText").textContent =
-    "Manage Frienzo accounts and status";
+    }
+);
 
 
-  if(!navigator.onLine){
+/* =====================================================
+   START
+   ===================================================== */
 
-    const cached =
-      cacheGet("frienzo_students");
+connectionState(
+    navigator.onLine
+        ? "connecting"
+        : "offline"
+);
 
+restoreSession();
+
+</script>
+
+</body>
+</html>
