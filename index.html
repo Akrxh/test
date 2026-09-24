@@ -1,240 +1,1218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#000000"><meta name="color-scheme" content="dark">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Frienzo</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 <style>
-:root{--tx:#f5f5f7;--mu:#86868b;--ln:rgba(255,255,255,.1);--go:#30d158;--pe:#ffd60a;--ou:#ff453a}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;overflow-x:hidden}
-body{background:radial-gradient(700px 420px at 50% -8%,rgba(255,255,255,.13),transparent 70%) no-repeat,#000;color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
-[hidden]{display:none!important}
-.wrap{max-width:30rem;margin:0 auto;padding:1rem 1rem 2.5rem}
-.g{background:rgba(255,255,255,.06);-webkit-backdrop-filter:blur(30px) saturate(160%);backdrop-filter:blur(30px) saturate(160%);border:1px solid var(--ln);border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);margin-bottom:1rem}
-.pad{padding:1.25rem}.c{text-align:center}
-.hd{position:relative;z-index:55;display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.4rem 0 1.2rem}
-.brand{font-weight:600;letter-spacing:-.01em;display:flex;gap:.5rem;align-items:center}
-.hr{display:flex;gap:.5rem}
-.brand{font-size:1.15rem;padding:0;cursor:default;touch-action:manipulation;-webkit-user-select:none;user-select:none}
-.tag{color:var(--mu);font-size:.72rem;margin:.2rem 0 0 1.6rem}
-.pill{display:flex;align-items:center;gap:.45rem;padding:.4rem .75rem;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--ln);font-size:.75rem;font-weight:500}
-.pill s{width:7px;height:7px;border-radius:50%;background:#555}
-.pill.ok s{background:var(--go);box-shadow:0 0 8px var(--go)}
-h1{font-size:1.6rem;letter-spacing:-.02em;margin:.2rem 0}
-.mu{color:var(--mu);font-size:.9rem;margin:.2rem 0 1rem}
-.dots{display:flex;justify-content:center;gap:.9rem;margin:1.3rem 0}
-.dots i{width:13px;height:13px;border-radius:50%;border:1.5px solid #6e6e73;transition:.15s}
-.dots i.f{background:#fff;border-color:#fff}
-.k3{display:grid;grid-template-columns:repeat(3,4.2rem);gap:.8rem;justify-content:center}
-.key{width:4.2rem;height:4.2rem;border-radius:50%;background:rgba(255,255,255,.09);font-size:1.5rem;font-weight:300}
-.key:active{background:rgba(255,255,255,.28)}
-.key.n{background:none;font-size:1.1rem}
-.shake{animation:sh .4s}
-@keyframes sh{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-.hero{display:flex;align-items:center;gap:1.2rem;padding:1.2rem}
-.rw{position:relative;width:8.2rem;height:8.2rem;flex-shrink:0}
-.rw svg{width:100%;height:100%}
-.tr,.ar{fill:none;stroke-width:9}
-.tr{stroke:rgba(255,255,255,.1)}
-.ar{stroke:#fff;stroke-linecap:round;transition:stroke-dasharray .8s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 6px rgba(255,255,255,.5))}
-.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.rc b{font-size:2.3rem;font-weight:600;letter-spacing:-.03em}
-.rc span{font-size:.68rem;color:var(--mu);margin-top:.3rem}
-.hm{min-width:0;flex:1}
-.hm small{color:var(--mu);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em}
-.hm h2{margin:.15rem 0 .8rem;font-size:1.35rem;letter-spacing:-.02em;font-weight:600}
-.lg{display:grid;gap:.4rem;font-size:.82rem;color:#c7c7cc}
-.lg div{display:flex;align-items:center;gap:.5rem}
-.lg b{margin-left:auto;color:var(--tx)}
-.lg s,.st s{width:8px;height:8px;border-radius:50%;background:var(--c);flex-shrink:0}
-.who{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
-.av{width:2.4rem;height:2.4rem;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;font-weight:600;flex-shrink:0}
-.nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
-.nm em{font-style:normal;color:var(--mu);font-size:.72rem;margin-left:.5rem}
-.sg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);padding:3px;border-radius:14px;background:rgba(118,118,128,.24)}
-.sg button{position:relative;z-index:1;padding:.7rem .2rem;font-size:.82rem;font-weight:500;color:#c7c7cc;display:flex;flex-direction:column;align-items:center;gap:.3rem;transition:color .25s}
-.sg button.on{color:#000}
-.sg i{font-size:1rem}
-.th{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/3);border-radius:11px;background:#f5f5f7;box-shadow:0 3px 10px rgba(0,0,0,.4);transition:transform .35s cubic-bezier(.3,1.15,.4,1)}
-.sec{margin:1.4rem .4rem .6rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mu);font-weight:500}
-.list{overflow:hidden}
-.row{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem}
-.row+.row{border-top:1px solid var(--ln)}
-.st{display:flex;align-items:center;gap:.45rem;font-size:.8rem;color:#c7c7cc;white-space:nowrap}
-.going{--c:var(--go)}.pending{--c:var(--pe)}.out{--c:var(--ou)}
-.note{text-align:center;color:#6e6e73;font-size:.72rem;margin:1.4rem 0 .6rem}
-.btn{padding:.75rem 1.2rem;border-radius:999px;background:#f5f5f7;color:#000;font-weight:600;font-size:.9rem}
-.btn.s{background:rgba(255,255,255,.1);color:var(--tx)}
-.inp{width:100%;background:rgba(118,118,128,.24);border:0;border-radius:12px;padding:.8rem .9rem;color:#fff;font:inherit;outline:none;margin-bottom:.6rem}
-.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-.modal.show{display:flex}
-.modal .g{width:100%;max-width:26rem;max-height:calc(100dvh - 2rem);overflow-y:auto;margin:0;background:rgba(28,28,30,.92)}
-.acts{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.5rem}
-.ar-row{display:flex;align-items:center;gap:.6rem;padding:.6rem 0;border-top:1px solid var(--ln);font-size:.9rem}
-.ar-row code{color:var(--mu);margin-right:.3rem}
-.ar-row button{color:var(--mu);font-size:.8rem}
-#toast{position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%);max-width:90vw;z-index:60;padding:.6rem 1rem;border-radius:999px;background:rgba(60,60,62,.95);font-size:.85rem;text-align:center}
-button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2px}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+:root{
+  --bg:#08090d;
+  --panel:#11131a;
+  --panel2:#171a23;
+  --line:#292e3a;
+  --text:#f4f6fb;
+  --muted:#8992a3;
+  --accent:#ff365f;
+  --accent2:#ff7043;
+  --green:#50d890;
+  --yellow:#ffc857;
+  --red:#ff5570;
+  --radius:16px;
+}
+
+*{box-sizing:border-box;margin:0}
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(255,54,95,.14),transparent 35%),
+    radial-gradient(circle at 100% 100%,rgba(255,112,67,.10),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+button,input,select{font:inherit}
+button{cursor:pointer}
+
+.hidden{display:none!important}
+
+.screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.auth{
+  width:100%;
+  max-width:390px;
+  background:linear-gradient(145deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:30px;
+  box-shadow:0 25px 80px rgba(0,0,0,.45);
+}
+
+.logo{
+  text-align:center;
+  font-size:32px;
+  font-weight:800;
+  letter-spacing:.04em;
+  margin-bottom:8px;
+}
+
+.logo span{
+  color:var(--accent);
+}
+
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:28px;
+}
+
+label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin:16px 0 7px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+input,select{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid var(--line);
+  background:#0b0d12;
+  color:var(--text);
+  border-radius:11px;
+  outline:none;
+}
+
+input:focus,select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(255,54,95,.12);
+}
+
+.btn{
+  width:100%;
+  border:0;
+  border-radius:11px;
+  padding:13px;
+  margin-top:18px;
+  color:white;
+  font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+}
+
+.btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.error{
+  color:var(--red);
+  font-size:13px;
+  margin-top:12px;
+  min-height:18px;
+  text-align:center;
+}
+
+.connection{
+  text-align:center;
+  margin-top:18px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--yellow);
+  margin-right:6px;
+}
+
+.dot.online{background:var(--green)}
+.dot.offline{background:var(--red)}
+
+.app{
+  min-height:100vh;
+}
+
+.topbar{
+  height:70px;
+  border-bottom:1px solid var(--line);
+  background:rgba(8,9,13,.88);
+  backdrop-filter:blur(14px);
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.toplogo{
+  font-weight:800;
+  font-size:21px;
+}
+
+.toplogo span{
+  color:var(--accent);
+}
+
+.topright{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.role{
+  padding:6px 10px;
+  border-radius:8px;
+  background:var(--panel2);
+  color:var(--muted);
+  font-size:12px;
+}
+
+.logout{
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--text);
+  border-radius:9px;
+  padding:8px 11px;
+}
+
+.container{
+  width:min(1100px,100%);
+  margin:auto;
+  padding:24px 18px 60px;
+}
+
+.hero{
+  margin-bottom:22px;
+}
+
+.hero h1{
+  font-size:30px;
+  margin-bottom:6px;
+}
+
+.hero p{
+  color:var(--muted);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:linear-gradient(145deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:19px;
+}
+
+.card h2{
+  font-size:16px;
+  margin-bottom:15px;
+}
+
+.stat{
+  font-size:30px;
+  font-weight:800;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.status.going{
+  color:var(--green);
+  background:rgba(80,216,144,.10);
+}
+
+.status.pending{
+  color:var(--yellow);
+  background:rgba(255,200,87,.10);
+}
+
+.status.out{
+  color:var(--red);
+  background:rgba(255,85,112,.10);
+}
+
+.student{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.student:last-child{
+  border-bottom:0;
+}
+
+.avatar{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  font-weight:800;
+}
+
+.student-main{
+  flex:1;
+}
+
+.student-name{
+  font-weight:700;
+}
+
+.student-cycle{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:3px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.small-btn{
+  border:1px solid var(--line);
+  background:var(--panel2);
+  color:var(--text);
+  border-radius:9px;
+  padding:8px 10px;
+  font-size:12px;
+}
+
+.small-btn.danger{
+  color:var(--red);
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 10px;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translateX(-50%);
+  background:var(--panel2);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 17px;
+  z-index:100;
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
+}
+
+.offline-banner{
+  background:#2a171b;
+  color:#ff9aaa;
+  border-bottom:1px solid #4a252d;
+  text-align:center;
+  padding:8px;
+  font-size:12px;
+}
+
+@media(max-width:600px){
+  .auth{padding:24px}
+  .topbar{padding:0 14px}
+  .role{display:none}
+}
 </style>
 </head>
+
 <body>
-<main class="wrap">
-  <header class="hd">
-    <div><button id="logo" class="brand" aria-label="Frienzo"><i class="fa-solid fa-circle-half-stroke"></i>Frienzo</button><div class="tag">made with love by Tryin'</div></div>
-    <div class="hr"><span id="live" class="pill"><s></s><em style="font-style:normal">Offline</em></span><button id="out" class="pill" hidden>Sign out</button></div>
+
+<!-- LOGIN -->
+<section id="loginScreen" class="screen">
+  <div class="auth">
+
+    <div class="logo">FRI<span>ENZO</span></div>
+    <div class="subtitle">Connect using your unique access code</div>
+
+    <label for="code">Access Code</label>
+    <input
+      id="code"
+      inputmode="numeric"
+      autocomplete="one-time-code"
+      maxlength="6"
+      placeholder="Enter your code"
+    >
+
+    <button id="loginBtn" class="btn">
+      Connect
+    </button>
+
+    <div id="loginError" class="error"></div>
+
+    <div class="connection">
+      <span id="connectionDot" class="dot"></span>
+      <span id="connectionText">Connecting to server...</span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- APP -->
+<div id="app" class="app hidden">
+
+  <div id="offlineBanner" class="offline-banner hidden">
+    Server unavailable — showing locally cached data.
+  </div>
+
+  <header class="topbar">
+
+    <div class="toplogo">
+      FRI<span>ENZO</span>
+    </div>
+
+    <div class="topright">
+      <span id="roleBadge" class="role"></span>
+      <button id="logoutBtn" class="logout">Logout</button>
+    </div>
+
   </header>
 
-  <div id="vApp" hidden>
-    <section class="g hero">
-      <div class="rw"><svg viewBox="0 0 120 120"><circle class="tr" cx="60" cy="60" r="52"/><circle id="arc" class="ar" cx="60" cy="60" r="52" transform="rotate(-90 60 60)" stroke-dasharray="0 326.7"/></svg>
-        <div class="rc"><b id="rn">0</b><span id="rl">of 0 confirmed</span></div></div>
-      <div class="hm"><small id="dw"></small><h2 id="dd"></h2><div class="lg" id="lg"></div></div>
+  <main class="container">
+
+    <section class="hero">
+      <h1 id="welcome">Welcome</h1>
+      <p id="heroText">Your Frienzo dashboard</p>
     </section>
-    <section id="sess" class="g pad"></section>
-    <h3 class="sec">Class roster</h3>
-    <div id="list" class="g list"></div>
-    <p id="note" class="note"></p>
-  </div>
-</main>
-<div id="mLogin" class="modal show"><div class="g pad c">
-  <h1>Enter your code</h1><p class="mu" style="margin-bottom:0">Your 4-digit code unlocks today's attendance.</p>
-  <div id="dots" class="dots"></div><div id="pad" class="k3"></div>
-  <div id="kBox" hidden><p class="mu">One-time setup: paste your Firebase Web API key (or the whole config).</p><input id="kIn" class="inp" placeholder="AIza…" autocomplete="off"><button id="kGo" class="btn" style="width:100%">Connect</button></div>
-  <p id="msg" class="mu" style="margin:1.1rem 0 0;min-height:1.2em">Connecting…</p>
-</div></div>
-<div id="toast" hidden></div>
 
-<div id="mAdmin" class="modal"><div class="g pad">
-  <div id="aGate"><h1 style="font-size:1.25rem">Admin access</h1><input id="aPass" type="password" class="inp" placeholder="Passcode" autocomplete="off">
-    <div class="acts"><button class="btn s" data-x>Cancel</button><button id="aGo" class="btn">Unlock</button></div></div>
-  <div id="aPanel" hidden><h1 style="font-size:1.25rem">Manage students</h1>
-    <input id="nName" class="inp" placeholder="Student name" maxlength="24"><input id="nCode" class="inp" placeholder="4-digit code" inputmode="numeric" maxlength="4">
-    <button id="aAdd" class="btn" style="width:100%">Add student</button><div id="aList" style="margin-top:1rem"></div>
-    <div class="acts"><button id="aExit" class="btn s">Exit admin</button><button class="btn" data-x>Done</button></div></div>
-</div></div>
+    <!-- STUDENT -->
+    <section id="studentView" class="hidden">
 
+      <div class="grid">
+
+        <div class="card">
+          <div class="muted">Name</div>
+          <div id="studentName" class="stat">—</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Cycle</div>
+          <div id="studentCycle" class="stat">—</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Current Status</div>
+          <div id="studentStatus" style="margin-top:10px">—</div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADMIN -->
+    <section id="adminView" class="hidden">
+
+      <div class="grid">
+
+        <div class="card">
+          <div class="muted">Students</div>
+          <div id="studentCount" class="stat">0</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Going</div>
+          <div id="goingCount" class="stat">0</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Pending</div>
+          <div id="pendingCount" class="stat">0</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">Out</div>
+          <div id="outCount" class="stat">0</div>
+        </div>
+
+      </div>
+
+      <div class="card" style="margin-top:16px">
+
+        <h2>Add Account</h2>
+
+        <div class="form-grid">
+
+          <div>
+            <label>Name</label>
+            <input id="newName" maxlength="24" placeholder="Student name">
+          </div>
+
+          <div>
+            <label>Unique Code</label>
+            <input
+              id="newCode"
+              inputmode="numeric"
+              maxlength="6"
+              placeholder="6 digit code"
+            >
+          </div>
+
+          <div>
+            <label>Cycle</label>
+            <input id="newCycle" maxlength="10" placeholder="A / B / C">
+          </div>
+
+        </div>
+
+        <button id="addBtn" class="btn">
+          Add Account
+        </button>
+
+      </div>
+
+
+      <div class="card" style="margin-top:16px">
+
+        <h2>Accounts & Status</h2>
+
+        <div id="studentsList"></div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- Firebase -->
 <script type="module">
-import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {getAuth,onAuthStateChanged,signInAnonymously} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import {getDatabase,ref,onValue,set,get,update,remove} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-const firebaseConfig={
-  apiKey:"", // Optional: Paste your API key here to bypass manual setup prompt
-  authDomain:"frienzo-originals.firebaseapp.com",
-  databaseURL:"https://frienzo-originals-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:"frienzo-originals"
-};
-const ST={going:{l:'Going',i:'fa-check'},pending:{l:'Pending',i:'fa-clock'},out:{l:'Not going',i:'fa-xmark'}};
-const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
-function fail(e){const c=e&&e.code||'';$('msg').textContent=c==='auth/operation-not-allowed'?'Enable Anonymous sign-in in Firebase Authentication.':c.includes('api-key')?'The Firebase API key is invalid.':'Connection problem: '+(c||e.message||e);show('vLoad');if(c.includes('api-key')){try{localStorage.removeItem('fz_key')}catch{}needKey()}}
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
-const P=n=>String(n).padStart(2,'0'),dk=d=>d.getFullYear()+'-'+P(d.getMonth()+1)+'-'+P(d.getDate());
-function lastB(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d>n)d.setDate(d.getDate()-1);while(d.getDay()===0)d.setDate(d.getDate()-1);return d}
-function target(){const d=lastB();d.setDate(d.getDate()+1);if(d.getDay()===0)d.setDate(d.getDate()+1);return d}
-function nextR(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d<=n)d.setDate(d.getDate()+1);while(d.getDay()===0)d.setDate(d.getDate()+1);return d}
-const cyc=()=>dk(lastB());
-const eff=u=>u&&u.cycle===cyc()&&ST[u.status]?u.status:'pending';
+import {
+  getAuth,
+  signInAnonymously,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-let db,uid,sessCode=null,sid,students=null,codes={},isAdmin=false,ready=false,pend=false;
-const subs={};
-function listen(k,path,cb){if(subs[k]&&subs[k].p===path)return;stop(k);subs[k]={p:path,off:onValue(ref(db,path),cb,e=>console.warn(path,e.code))}}
-function stop(k){if(subs[k]){subs[k].off();delete subs[k]}}
-function sync(){
-  if(sessCode)listen('me','codes/'+sessCode,s=>{sid=s.val();if(sid===null&&!pend)remove(ref(db,'sessions/'+uid));render()});else{stop('me');sid=null}
-  if(sessCode||isAdmin)listen('st','students',s=>{students=s.val()||{};render()});else{stop('st');students=null}
-  if(isAdmin)listen('cd','codes',s=>{codes=s.val()||{};render()});else{stop('cd');codes={}}
-  render();
-}
-function show(v){$('vApp').hidden=v!=='vApp';$('mLogin').classList.toggle('show',v!=='vApp');$('out').hidden=v!=='vApp'}
+import {
+  getDatabase,
+  ref,
+  get,
+  set,
+  update,
+  remove,
+  onValue,
+  off
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-function render(){
-  if(!ready)return show('vLoad');
-  const authed=sessCode&&typeof sid==='string'&&students&&students[sid];
-  if(!authed){$('msg').textContent=sessCode&&sid===undefined?'Checking…':'';return show('vLogin')}
-  show('vApp');
-  const L=Object.entries(students).sort((a,b)=>a[1].name.localeCompare(b[1].name));
-  const c={going:0,pending:0,out:0};L.forEach(([,u])=>c[eff(u)]++);
-  const td=target(),dn=td.toLocaleDateString(undefined,{weekday:'long'});
-  $('rn').textContent=c.going;$('rl').textContent='of '+L.length+' confirmed';$('arc').setAttribute('stroke-dasharray',(L.length?c.going/L.length*326.7:0)+' 326.7');
-  $('dw').textContent='Attendance for';$('dd').textContent=dn+', '+td.toLocaleDateString(undefined,{day:'numeric',month:'short'});$('lg').innerHTML=['going','pending','out'].map(k=>`<div class="${k}"><s style="--c:var(--${k=='going'?'go':k=='pending'?'pe':'ou'})"></s>${ST[k].l}<b>${c[k]}</b></div>`).join('');
-  const me=students[sid],m=eff(me);
-  $('sess').innerHTML=`<div class="who"><div class="av">${esc(me.name[0].toUpperCase())}</div><div class="nm">${esc(me.name)}</div><span class="pill" style="font-size:.7rem"><i class="fa-solid fa-lock-open"></i>Unlocked</span></div>
-  <div class="sg"><span class="th" style="transform:translateX(${['going','pending','out'].indexOf(m)*100}%)"></span>${['going','pending','out'].map(k=>`<button data-k="${k}" class="${m===k?'on':''}"><i class="fa-solid ${ST[k].i}"></i>${ST[k].l}</button>`).join('')}</div>`;
-  $('sess').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>update(ref(db,'students/'+sid),{status:b.dataset.k,cycle:cyc()}).catch(()=>toast('Could not save')));$('list').innerHTML=L.map(([id,u])=>{const k=eff(u);return `<div class="row"><span class="av">${esc(u.name[0].toUpperCase())}</span><span class="nm">${esc(u.name)}${id===sid?'<em>You</em>':''}</span><span class="st ${k}"><s></s>${ST[k].l}</span></div>`}).join('');
-  $('note').textContent='Resets to pending every day at 2:00 PM, except Sundays. Next reset: '+nextR().toLocaleDateString(undefined,{weekday:'long'})+' 2:00 PM.';
-  if(isAdmin)renderAdmin();
-}
 
-let buf='',busy=false,fails=0,lock=0;
-const dots=()=>$('dots').innerHTML=[0,1,2,3].map(i=>`<i class="${i<buf.length?'f':''}"></i>`).join('');
-$('pad').innerHTML=['1','2','3','4','5','6','7','8','9','','0','<'].map(k=>k===''?'<span></span>':`<button class="key ${k==='<'?'n':''}" data-k="${k}">${k==='<'?'<i class="fa-solid fa-delete-left"></i>':k}</button>`).join('');
-$('pad').querySelectorAll('button').forEach(b=>b.onclick=()=>key(b.dataset.k));
-document.addEventListener('keydown',e=>{if(!$('mLogin').classList.contains('show')||$('mAdmin').classList.contains('show'))return;if(/^\d$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('<')});
-async function key(k){
-  if(busy)return;if(!uid){buf='';dots();return toast($('msg').textContent||'Connecting…')}if(Date.now()<lock)return toast('Too many attempts. Try again shortly.');
-  buf=k==='<'?buf.slice(0,-1):(buf+k).slice(0,4);dots();if(buf.length<4)return;
-  busy=pend=true;const code=buf;
-  try{await set(ref(db,'sessions/'+uid),{code});sessCode=code;sid=undefined;pend=false;sync()}
-  catch{pend=false;fails++;$('dots').classList.add('shake');setTimeout(()=>$('dots').classList.remove('shake'),400);toast('Incorrect code');if(fails>=5){lock=Date.now()+30000;fails=0}}
-  busy=false;buf='';setTimeout(dots,250);
-}
-$('out').onclick=async()=>{await remove(ref(db,'sessions/'+uid)).catch(()=>{});sessCode=null;sid=null;students=null;stop('me');stop('st');render()};
+/* =========================================================
+   FIREBASE CONFIG
+   Replace these with YOUR Firebase project's values.
+   ========================================================= */
 
-const M=$('mAdmin');
-let taps=0,tapT;
-$('logo').onclick=()=>{clearTimeout(tapT);taps++;tapT=setTimeout(()=>taps=0,2000);if(taps>=10){taps=0;M.classList.add('show');$('aPass').value='';renderAdmin()}};
-M.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>M.classList.remove('show'));
-function renderAdmin(){
-  $('aGate').hidden=isAdmin;$('aPanel').hidden=!isAdmin;if(!isAdmin)return;
-  $('aList').innerHTML=Object.entries(students||{}).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([id,u])=>{const cd=Object.keys(codes).find(k=>codes[k]===id)||'----';
-    return `<div class="ar-row"><span class="nm">${esc(u.name)}</span><code>${cd}</code><button data-c="${id}">Code</button><button data-d="${id}" style="color:var(--ou)">Delete</button></div>`}).join('')||'<p class="mu">No students yet.</p>';
-  $('aList').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const id=b.dataset.d;if(!confirm('Delete '+students[id].name+'?'))return;const cd=Object.keys(codes).find(k=>codes[k]===id);const u={['students/'+id]:null};if(cd)u['codes/'+cd]=null;update(ref(db),u).catch(()=>toast('Failed'))});
-  $('aList').querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const id=b.dataset.c,n=prompt('New 4-digit code for '+students[id].name);if(n===null)return;if(!/^\d{4}$/.test(n))return toast('Code must be 4 digits');
-    try{if((await get(ref(db,'codes/'+n))).exists())return toast('Code already in use');const old=Object.keys(codes).find(k=>codes[k]===id);const u={['codes/'+n]:id};if(old)u['codes/'+old]=null;await update(ref(db),u);toast('Code updated')}catch{toast('Failed')}});
-}
-$('aGo').onclick=async()=>{pend=true;try{await set(ref(db,'adminSessions/'+uid),$('aPass').value);isAdmin=true;pend=false;sync()}catch{pend=false;toast('Incorrect passcode')}};
-$('aPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('aGo').click()});
-$('aExit').onclick=async()=>{await remove(ref(db,'adminSessions/'+uid)).catch(()=>{});isAdmin=false;M.classList.remove('show');sync()};$('aAdd').onclick=async()=>{
-  const n=$('nName').value.trim(),c=$('nCode').value.trim();
-  if(!n)return toast('Enter a name');if(!/^\d{4}$/.test(c))return toast('Code must be 4 digits');
-  try{if((await get(ref(db,'codes/'+c))).exists())return toast('Code already in use');
-    const id='s'+Date.now().toString(36);await update(ref(db),{['students/'+id]:{name:n,status:'pending',cycle:'-'},['codes/'+c]:id});
-    $('nName').value=$('nCode').value='';toast(n+' added')}catch{toast('Failed to add')}
+const firebaseConfig = {
+
+  apiKey: "YOUR_FIREBASE_API_KEY",
+
+  authDomain:
+    "YOUR_PROJECT.firebaseapp.com",
+
+  databaseURL:
+    "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId:
+    "YOUR_PROJECT",
+
+  storageBucket:
+    "YOUR_PROJECT.firebasestorage.app",
+
+  messagingSenderId:
+    "YOUR_MESSAGING_SENDER_ID",
+
+  appId:
+    "YOUR_FIREBASE_APP_ID"
 };
 
-dots();
-function start(apiKey){
-  const app=initializeApp({...firebaseConfig,apiKey});db=getDatabase(app);const auth=getAuth(app);let started=false;
-  onValue(ref(db,'.info/connected'),s=>{const l=$('live');l.classList.toggle('ok',!!s.val());l.querySelector('em').textContent=s.val()?'Live':'Offline'});
-  onAuthStateChanged(auth,u=>{
-    if(!u)return signInAnonymously(auth).catch(fail);
-    uid=u.uid;if(started)return;started=true;
-    onValue(ref(db,'sessions/'+uid),s=>{if(pend)return;const v=s.val();sessCode=v&&v.code||null;if(!sessCode)sid=null;ready=true;sync()},fail);
-    onValue(ref(db,'adminSessions/'+uid),s=>{if(pend)return;isAdmin=s.exists();sync()},()=>{});
-  });
-  setInterval(()=>{if(!$('vApp').hidden)render()},20000);
+
+/* =========================================================
+   APP SETTINGS
+   ========================================================= */
+
+const ADMIN_CODE = "260885";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+let firebaseUser = null;
+let currentCode = null;
+let currentStudentId = null;
+let currentRole = null;
+let studentsListener = null;
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
+
+const loginScreen = $("loginScreen");
+const appScreen = $("app");
+
+const codeInput = $("code");
+const loginBtn = $("loginBtn");
+const loginError = $("loginError");
+
+const connectionDot = $("connectionDot");
+const connectionText = $("connectionText");
+
+const offlineBanner = $("offlineBanner");
+
+const studentView = $("studentView");
+const adminView = $("adminView");
+
+
+/* =========================================================
+   CONNECTION STATUS
+   ========================================================= */
+
+function setConnection(online, text){
+
+  connectionDot.classList.toggle("online", online);
+  connectionDot.classList.toggle("offline", !online);
+
+  connectionText.textContent = text;
+
+  offlineBanner.classList.toggle(
+    "hidden",
+    online
+  );
 }
-function needKey(){$('kBox').hidden=false;$('dots').hidden=$('pad').hidden=true;$('msg').textContent=''}$('kGo').onclick=()=>{
-  const m=$('kIn').value.match(/AIza[\w-]{30,}/);if(!m)return toast('That does not look like an API key');
-  const k=m[0];try{localStorage.setItem('fz_key',k)}catch{}
-  fetch(firebaseConfig.databaseURL+'/public/apiKey.json',{method:'PUT',body:JSON.stringify(k)}).then(r=>{if(!r.ok)toast('Saved on this device.')}).catch(()=>{});
-  $('kBox').hidden=true;$('dots').hidden=$('pad').hidden=false;start(k);
-};
-try{
-  if(firebaseConfig.apiKey){start(firebaseConfig.apiKey)}
-  else{
-    const saved=localStorage.getItem('fz_key');
-    if(saved)start(saved);
-    else fetch(firebaseConfig.databaseURL+'/public/apiKey.json').then(r=>r.json()).then(k=>{if(k&&typeof k==='string'&&k.startsWith('AIza'))start(k);else needKey()}).catch(()=>needKey());
+
+
+window.addEventListener("online", () => {
+
+  setConnection(true, "Connected to server");
+
+  if(firebaseUser && currentRole === "admin"){
+    loadAdmin();
   }
-}catch{needKey()}
-</script>
-</body>
-</html>
+
+});
+
+window.addEventListener("offline", () => {
+
+  setConnection(false, "Offline");
+
+});
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function toast(message){
+
+  const el = document.createElement("div");
+
+  el.className = "toast";
+  el.textContent = message;
+
+  document.body.appendChild(el);
+
+  setTimeout(() => el.remove(), 2400);
+}
+
+
+/* =========================================================
+   LOCAL CACHE
+   ========================================================= */
+
+function cacheSet(key, value){
+
+  try{
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
+  }catch{}
+}
+
+
+function cacheGet(key){
+
+  try{
+
+    const value =
+      localStorage.getItem(key);
+
+    return value
+      ? JSON.parse(value)
+      : null;
+
+  }catch{
+
+    return null;
+
+  }
+}
+
+
+/* =========================================================
+   AUTOMATIC FIREBASE AUTHENTICATION
+   ========================================================= */
+
+async function ensureFirebaseConnection(){
+
+  setConnection(
+    navigator.onLine,
+    navigator.onLine
+      ? "Connecting to server..."
+      : "Offline"
+  );
+
+  if(!navigator.onLine){
+
+    const cached =
+      cacheGet("frienzo_session");
+
+    if(cached){
+
+      currentCode = cached.code;
+      currentRole = cached.role;
+      currentStudentId = cached.studentId;
+
+      openApp();
+
+      if(currentRole === "admin"){
+        loadAdmin();
+      }else{
+        loadStudent();
+      }
+
+    }
+
+    return;
+
+  }
+
+  try{
+
+    /*
+      Firebase anonymous authentication happens
+      automatically. The user never sees a
+      Firebase login screen.
+    */
+
+    if(!auth.currentUser){
+
+      await signInAnonymously(auth);
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    setConnection(
+      false,
+      "Server connection failed"
+    );
+
+    const cached =
+      cacheGet("frienzo_session");
+
+    if(cached){
+
+      currentCode = cached.code;
+      currentRole = cached.role;
+      currentStudentId = cached.studentId;
+
+      openApp();
+
+      if(currentRole === "admin"){
+        loadAdmin();
+      }else{
+        loadStudent();
+      }
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   FIREBASE AUTH STATE
+   ========================================================= */
+
+onAuthStateChanged(auth, user => {
+
+  if(user){
+
+    firebaseUser = user;
+
+    setConnection(
+      navigator.onLine,
+      navigator.onLine
+        ? "Connected to server"
+        : "Offline"
+    );
+
+  }
+
+});
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+loginBtn.addEventListener("click", login);
+
+codeInput.addEventListener("keydown", e => {
+
+  if(e.key === "Enter"){
+    login();
+  }
+
+});
+
+
+async function login(){
+
+  loginError.textContent = "";
+
+  const code =
+    codeInput.value.trim();
+
+  if(!/^[0-9]{6}$/.test(code)){
+
+    loginError.textContent =
+      "Enter a valid 6-digit code.";
+
+    return;
+
+  }
+
+
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Connecting...";
+
+
+  try{
+
+    /*
+      ADMIN
+
+      The admin code is recognized by the
+      application. Firebase authentication
+      is still required before database access.
+    */
+
+    if(code === ADMIN_CODE){
+
+      if(!firebaseUser){
+
+        if(!navigator.onLine){
+
+          cacheSet(
+            "frienzo_session",
+            {
+              code,
+              role:"admin",
+              studentId:null
+            }
+          );
+
+          currentCode = code;
+          currentRole = "admin";
+          currentStudentId = null;
+
+          openApp();
+          loadAdmin();
+
+          return;
+
+        }
+
+        await signInAnonymously(auth);
+
+      }
+
+      currentCode = code;
+      currentRole = "admin";
+      currentStudentId = null;
+
+      cacheSet(
+        "frienzo_session",
+        {
+          code,
+          role:"admin",
+          studentId:null
+        }
+      );
+
+      openApp();
+      loadAdmin();
+
+      return;
+
+    }
+
+
+    /*
+      STUDENT LOGIN
+    */
+
+    if(!firebaseUser){
+
+      if(!navigator.onLine){
+
+        const cached =
+          cacheGet("frienzo_session");
+
+        if(cached && cached.code === code){
+
+          currentCode = code;
+          currentRole = "student";
+          currentStudentId =
+            cached.studentId;
+
+          openApp();
+          loadStudent();
+
+          return;
+
+        }
+
+        throw new Error(
+          "This code has not been cached on this device."
+        );
+
+      }
+
+      await signInAnonymously(auth);
+
+    }
+
+
+    const codeSnap =
+      await get(
+        ref(db, "codes/" + code)
+      );
+
+
+    if(!codeSnap.exists()){
+
+      throw new Error(
+        "Invalid access code."
+      );
+
+    }
+
+
+    const studentId =
+      codeSnap.val();
+
+
+    const studentSnap =
+      await get(
+        ref(db, "students/" + studentId)
+      );
+
+
+    if(!studentSnap.exists()){
+
+      throw new Error(
+        "Account not found."
+      );
+
+    }
+
+
+    currentCode = code;
+    currentRole = "student";
+    currentStudentId = studentId;
+
+
+    cacheSet(
+      "frienzo_session",
+      {
+        code,
+        role:"student",
+        studentId
+      }
+    );
+
+
+    openApp();
+    loadStudent();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    loginError.textContent =
+      error.message ||
+      "Unable to connect.";
+
+  }finally{
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Connect";
+
+  }
+
+}
+
+
+/* =========================================================
+   OPEN APP
+   ========================================================= */
+
+function openApp(){
+
+  loginScreen.classList.add("hidden");
+  appScreen.classList.remove("hidden");
+
+  $("roleBadge").textContent =
+    currentRole === "admin"
+      ? "ADMIN"
+      : "STUDENT";
+
+}
+
+
+/* =========================================================
+   STUDENT
+   ========================================================= */
+
+async function loadStudent(){
+
+  studentView.classList.remove("hidden");
+  adminView.classList.add("hidden");
+
+  $("welcome").textContent =
+    "Welcome";
+
+  $("heroText").textContent =
+    "Your Frienzo account";
+
+
+  if(!navigator.onLine){
+
+    const cached =
+      cacheGet(
+        "frienzo_student_" +
+        currentStudentId
+      );
+
+    if(cached){
+
+      renderStudent(cached);
+
+    }
+
+    return;
+
+  }
+
+
+  try{
+
+    const snap =
+      await get(
+        ref(
+          db,
+          "students/" +
+          currentStudentId
+        )
+      );
+
+
+    if(!snap.exists()){
+
+      toast("Account no longer exists.");
+      logout();
+
+      return;
+
+    }
+
+
+    const data = snap.val();
+
+    cacheSet(
+      "frienzo_student_" +
+      currentStudentId,
+      data
+    );
+
+    renderStudent(data);
+
+
+    /*
+      Live status updates.
+    */
+
+    onValue(
+      ref(
+        db,
+        "students/" +
+        currentStudentId
+      ),
+      snap => {
+
+        if(snap.exists()){
+
+          const data = snap.val();
+
+          cacheSet(
+            "frienzo_student_" +
+            currentStudentId,
+            data
+          );
+
+          renderStudent(data);
+
+        }
+
+      }
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    const cached =
+      cacheGet(
+        "frienzo_student_" +
+        currentStudentId
+      );
+
+    if(cached){
+
+      renderStudent(cached);
+
+    }
+
+  }
+
+}
+
+
+function renderStudent(data){
+
+  $("studentName").textContent =
+    data.name || "Unknown";
+
+  $("studentCycle").textContent =
+    data.cycle || "—";
+
+  $("studentStatus").innerHTML =
+    statusHTML(
+      data.status
+    );
+
+  $("welcome").textContent =
+    "Welcome, " +
+    (data.name || "Student");
+
+}
+
+
+function statusHTML(status){
+
+  const names = {
+    going:"Going",
+    pending:"Pending",
+    out:"Out"
+  };
+
+  const icons = {
+    going:"●",
+    pending:"●",
+    out:"●"
+  };
+
+  const safe =
+    names[status]
+      ? status
+      : "pending";
+
+  return `
+    <span class="status ${safe}">
+      ${icons[safe]}
+      ${names[safe]}
+    </span>
+  `;
+
+}
+
+
+/* =========================================================
+   ADMIN
+   ========================================================= */
+
+async function loadAdmin(){
+
+  studentView.classList.add("hidden");
+  adminView.classList.remove("hidden");
+
+  $("welcome").textContent =
+    "Admin Dashboard";
+
+  $("heroText").textContent =
+    "Manage Frienzo accounts and status";
+
+
+  if(!navigator.onLine){
+
+    const cached =
+      cacheGet("frienzo_students");
+
