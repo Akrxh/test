@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000"><meta name="color-scheme" content="dark">
-<title>AttendanceSync</title>
+<title>Frienzo</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
 :root{--tx:#f5f5f7;--mu:#86868b;--ln:rgba(255,255,255,.1);--go:#30d158;--pe:#ffd60a;--ou:#ff453a}
@@ -19,6 +19,8 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .hd{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.4rem 0 1.2rem}
 .brand{font-weight:600;letter-spacing:-.01em;display:flex;gap:.5rem;align-items:center}
 .hr{display:flex;gap:.5rem}
+.brand{font-size:1.15rem;padding:0}
+.tag{color:var(--mu);font-size:.72rem;margin:.2rem 0 0 1.6rem}
 .pill{display:flex;align-items:center;gap:.45rem;padding:.4rem .75rem;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--ln);font-size:.75rem;font-weight:500}
 .pill s{width:7px;height:7px;border-radius:50%;background:#555}
 .pill.ok s{background:var(--go);box-shadow:0 0 8px var(--go)}
@@ -84,7 +86,7 @@ button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2p
 <body>
 <main class="wrap">
   <header class="hd">
-    <b class="brand"><i class="fa-solid fa-circle-half-stroke"></i>AttendanceSync</b>
+    <div><button id="logo" class="brand" aria-label="Frienzo"><i class="fa-solid fa-circle-half-stroke"></i>Frienzo</button><div class="tag">made with love by Tryin'</div></div>
     <div class="hr"><span id="live" class="pill"><s></s><em style="font-style:normal">Offline</em></span><button id="out" class="pill" hidden>Sign out</button></div>
   </header>
 
@@ -106,7 +108,6 @@ button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2p
     <div id="list" class="g list"></div>
     <p id="note" class="note"></p>
   </div>
-  <div class="c"><button id="adm" class="lnk">Admin access</button></div>
 </main>
 <div id="toast" hidden></div>
 
@@ -127,9 +128,9 @@ import {getDatabase,ref,onValue,set,get,update,remove} from 'https://www.gstatic
 /* ====== FIREBASE CONFIG: paste your Web API Key (Project settings > General) ====== */
 const firebaseConfig={
   apiKey:"PASTE_YOUR_WEB_API_KEY",
-  authDomain:"frienzo-frnd.firebaseapp.com",
-  databaseURL:"https://frienzo-frnd-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:"frienzo-frnd"
+  authDomain:"frienzo-originals.firebaseapp.com",
+  databaseURL:"https://frienzo-originals-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"frienzo-originals"
 };
 const ST={going:{l:'Going',i:'fa-check'},pending:{l:'Pending',i:'fa-clock'},out:{l:'Not going',i:'fa-xmark'}};
 const $=id=>document.getElementById(id);
@@ -199,7 +200,7 @@ $('out').onclick=async()=>{await remove(ref(db,'sessions/'+uid)).catch(()=>{});s
 
 /* ---------- Admin ---------- */
 const M=$('mAdmin');
-$('adm').onclick=()=>{M.classList.add('show');$('aPass').value='';renderAdmin()};
+$('logo').onclick=()=>{M.classList.add('show');$('aPass').value='';renderAdmin()};
 M.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>M.classList.remove('show'));
 function renderAdmin(){
   $('aGate').hidden=isAdmin;$('aPanel').hidden=!isAdmin;if(!isAdmin)return;
