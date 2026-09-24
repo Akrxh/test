@@ -105,6 +105,7 @@ button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2p
 <div id="mLogin" class="modal show"><div class="g pad c">
   <h1>Enter your code</h1><p class="mu" style="margin-bottom:0">Your 4-digit code unlocks today's attendance.</p>
   <div id="dots" class="dots"></div><div id="pad" class="k3"></div>
+  <div id="kBox" hidden><p class="mu">One-time setup: paste your Firebase Web API key (or the whole config).</p><input id="kIn" class="inp" placeholder="AIza…" autocomplete="off"><button id="kGo" class="btn" style="width:100%">Connect</button></div>
   <p id="msg" class="mu" style="margin:1.1rem 0 0;min-height:1.2em">Connecting…</p>
 </div></div>
 <div id="toast" hidden></div>
@@ -123,9 +124,9 @@ import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase
 import {getAuth,onAuthStateChanged,signInAnonymously} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {getDatabase,ref,onValue,set,get,update,remove} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-/* ====== FIREBASE CONFIG: paste your Web API Key (Project settings > General) ====== */
+/* ====== FIREBASE CONFIG. apiKey is optional here: if empty, the app asks for it once and shares it with every device through the database. ====== */
 const firebaseConfig={
-  apiKey:"PASTE_YOUR_WEB_API_KEY",
+  apiKey:"",
   authDomain:"frienzo-originals.firebaseapp.com",
   databaseURL:"https://frienzo-originals-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId:"frienzo-originals"
@@ -134,7 +135,7 @@ const ST={going:{l:'Going',i:'fa-check'},pending:{l:'Pending',i:'fa-clock'},out:
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
-function fail(e){const c=e&&e.code||'';$('msg').textContent=c==='auth/operation-not-allowed'?'Enable Anonymous sign-in in Firebase Authentication.':c.includes('api-key')?'The Firebase API key is invalid.':'Connection problem: '+(c||e.message||e);show('vLoad')}
+function fail(e){const c=e&&e.code||'';$('msg').textContent=c==='auth/operation-not-allowed'?'Enable Anonymous sign-in in Firebase Authentication.':c.includes('api-key')?'The Firebase API key is invalid.':'Connection problem: '+(c||e.message||e);show('vLoad');if(c.includes('api-key')){try{localStorage.removeItem('fz_key')}catch{}needKey()}}
 
 /* ---------- 2 PM cycle (Sundays skipped) ---------- */
 const P=n=>String(n).padStart(2,'0'),dk=d=>d.getFullYear()+'-'+P(d.getMonth()+1)+'-'+P(d.getDate());
@@ -222,9 +223,8 @@ $('aAdd').onclick=async()=>{
 
 /* ---------- Boot ---------- */
 dots();
-if(firebaseConfig.apiKey.startsWith('PASTE')){$('msg').textContent='Setup needed: paste your Firebase Web API key into firebaseConfig at the top of the script.'}
-else{
-  const app=initializeApp(firebaseConfig);db=getDatabase(app);const auth=getAuth(app);let started=false;
+function start(apiKey){
+  const app=initializeApp({...firebaseConfig,apiKey});db=getDatabase(app);const auth=getAuth(app);let started=false;
   onValue(ref(db,'.info/connected'),s=>{const l=$('live');l.classList.toggle('ok',!!s.val());l.querySelector('em').textContent=s.val()?'Live':'Offline'});
   onAuthStateChanged(auth,u=>{
     if(!u)return signInAnonymously(auth).catch(fail);
@@ -234,6 +234,20 @@ else{
   });
   setInterval(()=>{if(!$('vApp').hidden)render()},20000);
 }
+function needKey(){$('kBox').hidden=false;$('dots').hidden=$('pad').hidden=true;$('msg').textContent=''}
+$('kGo').onclick=()=>{
+  const m=$('kIn').value.match(/AIza[\w-]{30,}/);if(!m)return toast('That does not look like an API key');
+  const k=m[0];try{localStorage.setItem('fz_key',k)}catch{}
+  // Share the key with every other device (write-once node in the database)
+  fetch(firebaseConfig.databaseURL+'/public/apiKey.json',{method:'PUT',body:JSON.stringify(k)}).then(r=>{if(!r.ok)toast('Saved on this device. Publish the database rules so other devices connect automatically.')}).catch(()=>{});
+  $('kBox').hidden=true;$('dots').hidden=$('pad').hidden=false;$('msg').textContent='Connecting…';start(k);
+};
+(async()=>{
+  let k=firebaseConfig.apiKey;
+  if(!k){try{k=localStorage.getItem('fz_key')}catch{}}
+  if(!k){try{const r=await fetch(firebaseConfig.databaseURL+'/public/apiKey.json');if(r.ok)k=await r.json()}catch{}}
+  k&&typeof k==='string'?start(k):needKey();
+})();
 </script>
 </body>
 </html>
