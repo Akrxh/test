@@ -35,7 +35,6 @@ h1{font-size:1.6rem;letter-spacing:-.02em;margin:.2rem 0}
 .key.n{background:none;font-size:1.1rem}
 .shake{animation:sh .4s}
 @keyframes sh{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-.lnk{color:#6e6e73;font-size:.75rem;text-decoration:underline;text-underline-offset:4px}
 .hero{display:flex;align-items:center;gap:1.2rem;padding:1.2rem}
 .rw{position:relative;width:8.2rem;height:8.2rem;flex-shrink:0}
 .rw svg{width:100%;height:100%}
@@ -106,7 +105,7 @@ button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2p
   <h1>Enter your code</h1><p class="mu" style="margin-bottom:0">Your 4-digit code unlocks today's attendance.</p>
   <div id="dots" class="dots"></div><div id="pad" class="k3"></div>
   <div id="kBox" hidden><p class="mu">One-time setup: paste your Firebase Web API key (or the whole config).</p><input id="kIn" class="inp" placeholder="AIza…" autocomplete="off"><button id="kGo" class="btn" style="width:100%">Connect</button></div>
-  <p id="msg" class="mu" style="margin:1.1rem 0 0;min-height:1.2em"></p>
+  <p id="msg" class="mu" style="margin:1.1rem 0 0;min-height:1.2em">Connecting…</p>
 </div></div>
 <div id="toast" hidden></div>
 
@@ -125,7 +124,7 @@ import {getAuth,onAuthStateChanged,signInAnonymously} from 'https://www.gstatic.
 import {getDatabase,ref,onValue,set,get,update,remove} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 const firebaseConfig={
-  apiKey:"",
+  apiKey:"", // Optional: Paste your API key here to bypass manual setup prompt
   authDomain:"frienzo-originals.firebaseapp.com",
   databaseURL:"https://frienzo-originals-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId:"frienzo-originals"
@@ -134,12 +133,12 @@ const ST={going:{l:'Going',i:'fa-check'},pending:{l:'Pending',i:'fa-clock'},out:
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
-function fail(e){const c=e&&e.code||'';$('msg').textContent=c==='auth/operation-not-allowed'?'Enable Anonymous sign-in in Firebase Authentication.':c.includes('api-key')?'The Firebase API key is invalid.':'Connection problem: '+(c||e.message||e);if(c.includes('api-key')){try{localStorage.removeItem('fz_key')}catch{}needKey()}}
+function fail(e){const c=e&&e.code||'';$('msg').textContent=c==='auth/operation-not-allowed'?'Enable Anonymous sign-in in Firebase Authentication.':c.includes('api-key')?'The Firebase API key is invalid.':'Connection problem: '+(c||e.message||e);show('vLoad');if(c.includes('api-key')){try{localStorage.removeItem('fz_key')}catch{}needKey()}}
 
 const P=n=>String(n).padStart(2,'0'),dk=d=>d.getFullYear()+'-'+P(d.getMonth()+1)+'-'+P(d.getDate());
 function lastB(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d>n)d.setDate(d.getDate()-1);while(d.getDay()===0)d.setDate(d.getDate()-1);return d}
 function target(){const d=lastB();d.setDate(d.getDate()+1);if(d.getDay()===0)d.setDate(d.getDate()+1);return d}
-function nextR(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d<=n)d.setDate(d.getDate()+1);while(d.getDay()===0)d.setDate(d.getDay()+1);return d}
+function nextR(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d<=n)d.setDate(d.getDate()+1);while(d.getDay()===0)d.setDate(d.getDate()+1);return d}
 const cyc=()=>dk(lastB());
 const eff=u=>u&&u.cycle===cyc()&&ST[u.status]?u.status:'pending';
 
@@ -156,7 +155,7 @@ function sync(){
 function show(v){$('vApp').hidden=v!=='vApp';$('mLogin').classList.toggle('show',v!=='vApp');$('out').hidden=v!=='vApp'}
 
 function render(){
-  if(!ready)return;
+  if(!ready)return show('vLoad');
   const authed=sessCode&&typeof sid==='string'&&students&&students[sid];
   if(!authed){$('msg').textContent=sessCode&&sid===undefined?'Checking…':'';return show('vLogin')}
   show('vApp');
@@ -179,7 +178,7 @@ $('pad').innerHTML=['1','2','3','4','5','6','7','8','9','','0','<'].map(k=>k==='
 $('pad').querySelectorAll('button').forEach(b=>b.onclick=()=>key(b.dataset.k));
 document.addEventListener('keydown',e=>{if(!$('mLogin').classList.contains('show')||$('mAdmin').classList.contains('show'))return;if(/^\d$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('<')});
 async function key(k){
-  if(busy)return;if(!uid){buf='';dots();return toast('Connecting to server…')}if(Date.now()<lock)return toast('Too many attempts. Try again shortly.');
+  if(busy)return;if(!uid){buf='';dots();return toast($('msg').textContent||'Connecting…')}if(Date.now()<lock)return toast('Too many attempts. Try again shortly.');
   buf=k==='<'?buf.slice(0,-1):(buf+k).slice(0,4);dots();if(buf.length<4)return;
   busy=pend=true;const code=buf;
   try{await set(ref(db,'sessions/'+uid),{code});sessCode=code;sid=undefined;pend=false;sync()}
@@ -226,14 +225,16 @@ function needKey(){$('kBox').hidden=false;$('dots').hidden=$('pad').hidden=true;
   const m=$('kIn').value.match(/AIza[\w-]{30,}/);if(!m)return toast('That does not look like an API key');
   const k=m[0];try{localStorage.setItem('fz_key',k)}catch{}
   fetch(firebaseConfig.databaseURL+'/public/apiKey.json',{method:'PUT',body:JSON.stringify(k)}).then(r=>{if(!r.ok)toast('Saved on this device.')}).catch(()=>{});
-  $('kBox').hidden=true;$('dots').hidden=$('pad').hidden=false;$('msg').textContent='';start(k);
+  $('kBox').hidden=true;$('dots').hidden=$('pad').hidden=false;start(k);
 };
-(async()=>{
-  let k=firebaseConfig.apiKey;
-  if(!k){try{k=localStorage.getItem('fz_key')}catch{}}
-  if(!k){try{const r=await fetch(firebaseConfig.databaseURL+'/public/apiKey.json');if(r.ok)k=await r.json()}catch{}}
-  k&&typeof k==='string'?start(k):needKey();
-})();
+try{
+  if(firebaseConfig.apiKey){start(firebaseConfig.apiKey)}
+  else{
+    const saved=localStorage.getItem('fz_key');
+    if(saved)start(saved);
+    else fetch(firebaseConfig.databaseURL+'/public/apiKey.json').then(r=>r.json()).then(k=>{if(k&&typeof k==='string'&&k.startsWith('AIza'))start(k);else needKey()}).catch(()=>needKey());
+  }
+}catch{needKey()}
 </script>
 </body>
 </html>
