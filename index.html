@@ -16,10 +16,10 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .wrap{max-width:30rem;margin:0 auto;padding:1rem 1rem 2.5rem}
 .g{background:rgba(255,255,255,.06);-webkit-backdrop-filter:blur(30px) saturate(160%);backdrop-filter:blur(30px) saturate(160%);border:1px solid var(--ln);border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);margin-bottom:1rem}
 .pad{padding:1.25rem}.c{text-align:center}
-.hd{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.4rem 0 1.2rem}
+.hd{position:relative;z-index:55;display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.4rem 0 1.2rem}
 .brand{font-weight:600;letter-spacing:-.01em;display:flex;gap:.5rem;align-items:center}
 .hr{display:flex;gap:.5rem}
-.brand{font-size:1.15rem;padding:0}
+.brand{font-size:1.15rem;padding:0;cursor:default;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 .tag{color:var(--mu);font-size:.72rem;margin:.2rem 0 0 1.6rem}
 .pill{display:flex;align-items:center;gap:.45rem;padding:.4rem .75rem;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--ln);font-size:.75rem;font-weight:500}
 .pill s{width:7px;height:7px;border-radius:50%;background:#555}
@@ -90,13 +90,6 @@ button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2p
     <div class="hr"><span id="live" class="pill"><s></s><em style="font-style:normal">Offline</em></span><button id="out" class="pill" hidden>Sign out</button></div>
   </header>
 
-  <section id="vLoad" class="g pad c"><p id="msg" class="mu" style="margin:0">Connecting…</p></section>
-
-  <section id="vLogin" class="g pad c" hidden>
-    <h1>Enter your code</h1><p class="mu" style="margin-bottom:0">Your 4-digit code unlocks today's attendance.</p>
-    <div id="dots" class="dots"></div><div id="pad" class="k3"></div>
-  </section>
-
   <div id="vApp" hidden>
     <section class="g hero">
       <div class="rw"><svg viewBox="0 0 120 120"><circle class="tr" cx="60" cy="60" r="52"/><circle id="arc" class="ar" cx="60" cy="60" r="52" transform="rotate(-90 60 60)" stroke-dasharray="0 326.7"/></svg>
@@ -109,6 +102,11 @@ button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2p
     <p id="note" class="note"></p>
   </div>
 </main>
+<div id="mLogin" class="modal show"><div class="g pad c">
+  <h1>Enter your code</h1><p class="mu" style="margin-bottom:0">Your 4-digit code unlocks today's attendance.</p>
+  <div id="dots" class="dots"></div><div id="pad" class="k3"></div>
+  <p id="msg" class="mu" style="margin:1.1rem 0 0;min-height:1.2em">Connecting…</p>
+</div></div>
 <div id="toast" hidden></div>
 
 <div id="mAdmin" class="modal"><div class="g pad">
@@ -158,13 +156,13 @@ function sync(){
   if(isAdmin)listen('cd','codes',s=>{codes=s.val()||{};render()});else{stop('cd');codes={}}
   render();
 }
-function show(v){['vLoad','vLogin','vApp'].forEach(x=>$(x).hidden=x!==v);$('out').hidden=v!=='vApp'}
+function show(v){$('vApp').hidden=v!=='vApp';$('mLogin').classList.toggle('show',v!=='vApp');$('out').hidden=v!=='vApp'}
 
 /* ---------- Render ---------- */
 function render(){
   if(!ready)return show('vLoad');
   const authed=sessCode&&typeof sid==='string'&&students&&students[sid];
-  if(!authed)return show(sessCode&&sid===undefined?'vLoad':'vLogin');
+  if(!authed){$('msg').textContent=sessCode&&sid===undefined?'Checking…':'';return show('vLogin')}
   show('vApp');
   const L=Object.entries(students).sort((a,b)=>a[1].name.localeCompare(b[1].name));
   const c={going:0,pending:0,out:0};L.forEach(([,u])=>c[eff(u)]++);
@@ -187,9 +185,9 @@ let buf='',busy=false,fails=0,lock=0;
 const dots=()=>$('dots').innerHTML=[0,1,2,3].map(i=>`<i class="${i<buf.length?'f':''}"></i>`).join('');
 $('pad').innerHTML=['1','2','3','4','5','6','7','8','9','','0','<'].map(k=>k===''?'<span></span>':`<button class="key ${k==='<'?'n':''}" data-k="${k}">${k==='<'?'<i class="fa-solid fa-delete-left"></i>':k}</button>`).join('');
 $('pad').querySelectorAll('button').forEach(b=>b.onclick=()=>key(b.dataset.k));
-document.addEventListener('keydown',e=>{if($('vLogin').hidden||$('mAdmin').classList.contains('show'))return;if(/^\d$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('<')});
+document.addEventListener('keydown',e=>{if(!$('mLogin').classList.contains('show')||$('mAdmin').classList.contains('show'))return;if(/^\d$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('<')});
 async function key(k){
-  if(busy)return;if(Date.now()<lock)return toast('Too many attempts. Try again shortly.');
+  if(busy)return;if(!uid){buf='';dots();return toast($('msg').textContent||'Connecting…')}if(Date.now()<lock)return toast('Too many attempts. Try again shortly.');
   buf=k==='<'?buf.slice(0,-1):(buf+k).slice(0,4);dots();if(buf.length<4)return;
   busy=pend=true;const code=buf;
   try{await set(ref(db,'sessions/'+uid),{code});sessCode=code;sid=undefined;pend=false;sync()}
@@ -200,7 +198,8 @@ $('out').onclick=async()=>{await remove(ref(db,'sessions/'+uid)).catch(()=>{});s
 
 /* ---------- Admin ---------- */
 const M=$('mAdmin');
-$('logo').onclick=()=>{M.classList.add('show');$('aPass').value='';renderAdmin()};
+let taps=0,tapT;
+$('logo').onclick=()=>{clearTimeout(tapT);taps++;tapT=setTimeout(()=>taps=0,2000);if(taps>=10){taps=0;M.classList.add('show');$('aPass').value='';renderAdmin()}};
 M.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>M.classList.remove('show'));
 function renderAdmin(){
   $('aGate').hidden=isAdmin;$('aPanel').hidden=!isAdmin;if(!isAdmin)return;
