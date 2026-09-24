@@ -106,7 +106,7 @@ button:focus-visible,.inp:focus-visible{outline:2px solid #fff;outline-offset:2p
   <h1>Enter your code</h1><p class="mu" style="margin-bottom:0">Your 4-digit code unlocks today's attendance.</p>
   <div id="dots" class="dots"></div><div id="pad" class="k3"></div>
   <div id="kBox" hidden><p class="mu">One-time setup: paste your Firebase Web API key (or the whole config).</p><input id="kIn" class="inp" placeholder="AIza…" autocomplete="off"><button id="kGo" class="btn" style="width:100%">Connect</button></div>
-  <p id="msg" class="mu" style="margin:1.1rem 0 0;min-height:1.2em">Connecting…</p>
+  <p id="msg" class="mu" style="margin:1.1rem 0 0;min-height:1.2em"></p>
 </div></div>
 <div id="toast" hidden></div>
 
@@ -124,7 +124,6 @@ import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase
 import {getAuth,onAuthStateChanged,signInAnonymously} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {getDatabase,ref,onValue,set,get,update,remove} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-/* ====== FIREBASE CONFIG. apiKey is optional here: if empty, the app asks for it once and shares it with every device through the database. ====== */
 const firebaseConfig={
   apiKey:"",
   authDomain:"frienzo-originals.firebaseapp.com",
@@ -135,18 +134,15 @@ const ST={going:{l:'Going',i:'fa-check'},pending:{l:'Pending',i:'fa-clock'},out:
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
-function fail(e){const c=e&&e.code||'';$('msg').textContent=c==='auth/operation-not-allowed'?'Enable Anonymous sign-in in Firebase Authentication.':c.includes('api-key')?'The Firebase API key is invalid.':'Connection problem: '+(c||e.message||e);show('vLoad');if(c.includes('api-key')){try{localStorage.removeItem('fz_key')}catch{}needKey()}}
+function fail(e){const c=e&&e.code||'';$('msg').textContent=c==='auth/operation-not-allowed'?'Enable Anonymous sign-in in Firebase Authentication.':c.includes('api-key')?'The Firebase API key is invalid.':'Connection problem: '+(c||e.message||e);if(c.includes('api-key')){try{localStorage.removeItem('fz_key')}catch{}needKey()}}
 
-/* ---------- 2 PM cycle (Sundays skipped) ---------- */
 const P=n=>String(n).padStart(2,'0'),dk=d=>d.getFullYear()+'-'+P(d.getMonth()+1)+'-'+P(d.getDate());
 function lastB(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d>n)d.setDate(d.getDate()-1);while(d.getDay()===0)d.setDate(d.getDate()-1);return d}
 function target(){const d=lastB();d.setDate(d.getDate()+1);if(d.getDay()===0)d.setDate(d.getDate()+1);return d}
-function nextR(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d<=n)d.setDate(d.getDate()+1);while(d.getDay()===0)d.setDate(d.getDate()+1);return d}
+function nextR(n=new Date()){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),14);if(d<=n)d.setDate(d.getDate()+1);while(d.getDay()===0)d.setDate(d.getDay()+1);return d}
 const cyc=()=>dk(lastB());
-// A status only counts if it was set in the current cycle; otherwise it reads as Pending.
 const eff=u=>u&&u.cycle===cyc()&&ST[u.status]?u.status:'pending';
 
-/* ---------- State ---------- */
 let db,uid,sessCode=null,sid,students=null,codes={},isAdmin=false,ready=false,pend=false;
 const subs={};
 function listen(k,path,cb){if(subs[k]&&subs[k].p===path)return;stop(k);subs[k]={p:path,off:onValue(ref(db,path),cb,e=>console.warn(path,e.code))}}
@@ -159,36 +155,31 @@ function sync(){
 }
 function show(v){$('vApp').hidden=v!=='vApp';$('mLogin').classList.toggle('show',v!=='vApp');$('out').hidden=v!=='vApp'}
 
-/* ---------- Render ---------- */
 function render(){
-  if(!ready)return show('vLoad');
+  if(!ready)return;
   const authed=sessCode&&typeof sid==='string'&&students&&students[sid];
   if(!authed){$('msg').textContent=sessCode&&sid===undefined?'Checking…':'';return show('vLogin')}
   show('vApp');
   const L=Object.entries(students).sort((a,b)=>a[1].name.localeCompare(b[1].name));
   const c={going:0,pending:0,out:0};L.forEach(([,u])=>c[eff(u)]++);
   const td=target(),dn=td.toLocaleDateString(undefined,{weekday:'long'});
-  $('rn').textContent=c.going;$('rl').textContent='of '+L.length+' confirmed';
-  $('arc').setAttribute('stroke-dasharray',(L.length?c.going/L.length*326.7:0)+' 326.7');
-  $('dw').textContent='Attendance for';$('dd').textContent=dn+', '+td.toLocaleDateString(undefined,{day:'numeric',month:'short'});
-  $('lg').innerHTML=['going','pending','out'].map(k=>`<div class="${k}"><s style="--c:var(--${k=='going'?'go':k=='pending'?'pe':'ou'})"></s>${ST[k].l}<b>${c[k]}</b></div>`).join('');
+  $('rn').textContent=c.going;$('rl').textContent='of '+L.length+' confirmed';$('arc').setAttribute('stroke-dasharray',(L.length?c.going/L.length*326.7:0)+' 326.7');
+  $('dw').textContent='Attendance for';$('dd').textContent=dn+', '+td.toLocaleDateString(undefined,{day:'numeric',month:'short'});$('lg').innerHTML=['going','pending','out'].map(k=>`<div class="${k}"><s style="--c:var(--${k=='going'?'go':k=='pending'?'pe':'ou'})"></s>${ST[k].l}<b>${c[k]}</b></div>`).join('');
   const me=students[sid],m=eff(me);
   $('sess').innerHTML=`<div class="who"><div class="av">${esc(me.name[0].toUpperCase())}</div><div class="nm">${esc(me.name)}</div><span class="pill" style="font-size:.7rem"><i class="fa-solid fa-lock-open"></i>Unlocked</span></div>
   <div class="sg"><span class="th" style="transform:translateX(${['going','pending','out'].indexOf(m)*100}%)"></span>${['going','pending','out'].map(k=>`<button data-k="${k}" class="${m===k?'on':''}"><i class="fa-solid ${ST[k].i}"></i>${ST[k].l}</button>`).join('')}</div>`;
-  $('sess').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>update(ref(db,'students/'+sid),{status:b.dataset.k,cycle:cyc()}).catch(()=>toast('Could not save')));
-  $('list').innerHTML=L.map(([id,u])=>{const k=eff(u);return `<div class="row"><span class="av">${esc(u.name[0].toUpperCase())}</span><span class="nm">${esc(u.name)}${id===sid?'<em>You</em>':''}</span><span class="st ${k}"><s></s>${ST[k].l}</span></div>`}).join('');
+  $('sess').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>update(ref(db,'students/'+sid),{status:b.dataset.k,cycle:cyc()}).catch(()=>toast('Could not save')));$('list').innerHTML=L.map(([id,u])=>{const k=eff(u);return `<div class="row"><span class="av">${esc(u.name[0].toUpperCase())}</span><span class="nm">${esc(u.name)}${id===sid?'<em>You</em>':''}</span><span class="st ${k}"><s></s>${ST[k].l}</span></div>`}).join('');
   $('note').textContent='Resets to pending every day at 2:00 PM, except Sundays. Next reset: '+nextR().toLocaleDateString(undefined,{weekday:'long'})+' 2:00 PM.';
   if(isAdmin)renderAdmin();
 }
 
-/* ---------- Login ---------- */
 let buf='',busy=false,fails=0,lock=0;
 const dots=()=>$('dots').innerHTML=[0,1,2,3].map(i=>`<i class="${i<buf.length?'f':''}"></i>`).join('');
 $('pad').innerHTML=['1','2','3','4','5','6','7','8','9','','0','<'].map(k=>k===''?'<span></span>':`<button class="key ${k==='<'?'n':''}" data-k="${k}">${k==='<'?'<i class="fa-solid fa-delete-left"></i>':k}</button>`).join('');
 $('pad').querySelectorAll('button').forEach(b=>b.onclick=()=>key(b.dataset.k));
 document.addEventListener('keydown',e=>{if(!$('mLogin').classList.contains('show')||$('mAdmin').classList.contains('show'))return;if(/^\d$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('<')});
 async function key(k){
-  if(busy)return;if(!uid){buf='';dots();return toast($('msg').textContent||'Connecting…')}if(Date.now()<lock)return toast('Too many attempts. Try again shortly.');
+  if(busy)return;if(!uid){buf='';dots();return toast('Connecting to server…')}if(Date.now()<lock)return toast('Too many attempts. Try again shortly.');
   buf=k==='<'?buf.slice(0,-1):(buf+k).slice(0,4);dots();if(buf.length<4)return;
   busy=pend=true;const code=buf;
   try{await set(ref(db,'sessions/'+uid),{code});sessCode=code;sid=undefined;pend=false;sync()}
@@ -197,7 +188,6 @@ async function key(k){
 }
 $('out').onclick=async()=>{await remove(ref(db,'sessions/'+uid)).catch(()=>{});sessCode=null;sid=null;students=null;stop('me');stop('st');render()};
 
-/* ---------- Admin ---------- */
 const M=$('mAdmin');
 let taps=0,tapT;
 $('logo').onclick=()=>{clearTimeout(tapT);taps++;tapT=setTimeout(()=>taps=0,2000);if(taps>=10){taps=0;M.classList.add('show');$('aPass').value='';renderAdmin()}};
@@ -212,8 +202,7 @@ function renderAdmin(){
 }
 $('aGo').onclick=async()=>{pend=true;try{await set(ref(db,'adminSessions/'+uid),$('aPass').value);isAdmin=true;pend=false;sync()}catch{pend=false;toast('Incorrect passcode')}};
 $('aPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('aGo').click()});
-$('aExit').onclick=async()=>{await remove(ref(db,'adminSessions/'+uid)).catch(()=>{});isAdmin=false;M.classList.remove('show');sync()};
-$('aAdd').onclick=async()=>{
+$('aExit').onclick=async()=>{await remove(ref(db,'adminSessions/'+uid)).catch(()=>{});isAdmin=false;M.classList.remove('show');sync()};$('aAdd').onclick=async()=>{
   const n=$('nName').value.trim(),c=$('nCode').value.trim();
   if(!n)return toast('Enter a name');if(!/^\d{4}$/.test(c))return toast('Code must be 4 digits');
   try{if((await get(ref(db,'codes/'+c))).exists())return toast('Code already in use');
@@ -221,7 +210,6 @@ $('aAdd').onclick=async()=>{
     $('nName').value=$('nCode').value='';toast(n+' added')}catch{toast('Failed to add')}
 };
 
-/* ---------- Boot ---------- */
 dots();
 function start(apiKey){
   const app=initializeApp({...firebaseConfig,apiKey});db=getDatabase(app);const auth=getAuth(app);let started=false;
@@ -234,13 +222,11 @@ function start(apiKey){
   });
   setInterval(()=>{if(!$('vApp').hidden)render()},20000);
 }
-function needKey(){$('kBox').hidden=false;$('dots').hidden=$('pad').hidden=true;$('msg').textContent=''}
-$('kGo').onclick=()=>{
+function needKey(){$('kBox').hidden=false;$('dots').hidden=$('pad').hidden=true;$('msg').textContent=''}$('kGo').onclick=()=>{
   const m=$('kIn').value.match(/AIza[\w-]{30,}/);if(!m)return toast('That does not look like an API key');
   const k=m[0];try{localStorage.setItem('fz_key',k)}catch{}
-  // Share the key with every other device (write-once node in the database)
-  fetch(firebaseConfig.databaseURL+'/public/apiKey.json',{method:'PUT',body:JSON.stringify(k)}).then(r=>{if(!r.ok)toast('Saved on this device. Publish the database rules so other devices connect automatically.')}).catch(()=>{});
-  $('kBox').hidden=true;$('dots').hidden=$('pad').hidden=false;$('msg').textContent='Connecting…';start(k);
+  fetch(firebaseConfig.databaseURL+'/public/apiKey.json',{method:'PUT',body:JSON.stringify(k)}).then(r=>{if(!r.ok)toast('Saved on this device.')}).catch(()=>{});
+  $('kBox').hidden=true;$('dots').hidden=$('pad').hidden=false;$('msg').textContent='';start(k);
 };
 (async()=>{
   let k=firebaseConfig.apiKey;
