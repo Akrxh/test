@@ -2,6 +2,11 @@
   "rules": {
     ".read": false,
     ".write": false,
+    "adminKey": {
+      ".read": false,
+      ".write": false,
+      ".validate": "newData.val() === 'drgstkahq2'"
+    },
     "public": {
       ".read": true,
       "apiKey": {
@@ -19,7 +24,7 @@
     "adminSessions": {
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid && (!newData.exists() || newData.val() === root.child('adminKey').val())"
+        ".write": "auth != null && auth.uid === $uid && (!newData.exists() || newData.val() === 'drgstkahq2')"
       }
     },
     "codes": {
